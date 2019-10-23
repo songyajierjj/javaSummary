@@ -1,0 +1,38 @@
+http://blog.csdn.net/shymi1991/article/details/52971994
+
+http://blog.csdn.net/tangdong3415/article/details/53432166
+1启动kafka(启动之前先启动zookeeper)
+sh bin/kafka-server-start.sh config/server.properties
+
+2创建一个test的topic
+topic 名字为test，2个副本和1个分块
+sh bin/kafka-topics.sh --create --zookeeper 192.168.40.46:2181 --replication-factor 2 --partitions 1 --topic test
+提示：Created topic "test".
+
+可以通过list命令查看创建的topic:
+sh bin/kafka-topics.sh --list --zookeeper 192.168.40.46:2181
+显示：test
+
+3运行producer并在控制台中输一些消息，这些消息将被发送到服务端：
+sh bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test 
+
+4Kafka也有一个命令行consumer可以读取消息并输出到标准输出：
+sh bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+
+
+describe topics命令来观察哪一个代理在处理该topic。
+sh bin/kafka-topics.sh --describe --zookeeper 192.168.40.46:2181 --topic my-replicated-topic
+
+第一行是topic概观，描述该topic的信息。接下来每一行显示该topic一个分块的信息。因为我们这个topic只有一个分块，所以只有一行。
+Leader：负责该分块的读写，随机选举出来的节点；
+replica：复制分块的节点；
+isr：是replica的子集，leader的候选集，即slave。
+
+在该例子中，node 1是mytest2唯一一个分块的leader。
+
+Topic:mytest2   PartitionCount:1        ReplicationFactor:2     Configs:
+Topic: mytest2  Partition: 0    Leader: 1       Replicas: 1,2   Isr: 1,2
+
+
+容错测试。我们kill作为leader的Broker 1：
+ps aux | grep server2.properties

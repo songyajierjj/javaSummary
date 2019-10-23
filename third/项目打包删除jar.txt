@@ -1,0 +1,2 @@
+microcredit-jobadmin 删除c3p0-0.9.5.2.jar
+管理后台删除 slf4j-log4j12-1.7.25.jar

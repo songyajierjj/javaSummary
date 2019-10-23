@@ -1,0 +1,52 @@
+http://blog.sina.com.cn/s/blog_6f3ca78f0100xgin.html
+切割tomcat日志
+1、下载cronolog（最新版本）
+    # wget http://cronolog.org/download/cronolog-1.6.2.tar.gz
+
+2、解压缩
+    # tar zxvf cronolog-1.6.2.tar.gz
+
+3、进入cronolog安装文件所在目录
+    # cd cronolog-1.6.2
+
+4、运行安装
+    # ./configure
+    # make
+    # make install
+
+5、查看cronolog安装后所在目录（验证安装是否成功）
+    # which cronolog
+
+一般情况下显示为：/usr/local/sbin/cronolog
+
+要想分割tomcat的catalina.out，需作如下个工作：
+
+进入到$CATALINA_BASE/bin目录下找到catalina.sh文件，找到下面那句话(可找到两处，if和else两种情况)：
+    org.apache.catalina.startup.Bootstrap “$@” start   \   
+    >> “$CATALINA_BASE”/logs/catalina.out 2>&1 &  
+
+修改为
+    org.apache.catalina.startup.Bootstrap "$@" start |/usr/local/sbin/cronolog "$CATALINA_BASE"/logs/catalina.%Y-%m-%d.out >> /dev/null 2>&1 &
+（注意：上面是一句话并没有换行）  
+
+同时，上面有一行
+touch "$CATALINA_OUT"
+
+修改为
+touch "$CATALINA_BASE"/logs/catalina.`date +%Y-%m-%d`.out
+
+可以注释掉，完成之后重起Tomcat就可以了，
+看logs文件中是否有catalina.2011-08-26.out样式的日志。
+
+修改完成，顺带解释一下上面几个linux命令的意思：
+1：这句话org.apache.catalina.startup.Bootstrap “$@” start   \   最后面的“\”起到“连接”的
+   作用，连接换行的下面那句话；
+2：org.apache.catalina.startup.Bootstrap "$@" start |最后面的“|”是linux中的管道命令，意思是把前
+   面命令的输入，作为“|”号后面命令的输入；
+3：/usr/local/sbin/cronolog，cronolog的命令运行目录；
+4：“>>”增量叠加输入到后面的文件；
+5：/dev/null 2>&1 ：/dev/null 代表空设备文件，> 代表重定向到哪里,0 表示stdout标准输入，1 表示
+   stdout标准输出，2 表示stderr标准错误， & 表示等同于的意思，2>&1，表示2的输出重定向等同于1。
+   所以 1> /dev/null 2>&1 的含义 ：1>/dev/null 首先表示标准输出重定向到空设备文件，也就是不输出任
+   何信息到终端，说白了就是不显示任何信息。2>&1 接着，标准错误输出重定向等同于 标准输出，因为之前
+   标准输出已经重定向到了空设备文件，所以标准错误输出也重定向到空设备文件 。

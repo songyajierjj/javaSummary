@@ -1,0 +1,37 @@
+http://blog.csdn.net/chao_19/article/details/51764150
+http://www.cnblogs.com/dengzy/p/5677571.html
+
+Dubbo缺省协议，使用基于mina1.1.7+hessian3.2.1的tbremoting交互
+连接个数：单连接
+连接方式：长连接
+传输协议：TCP
+传输方式：NIO异步传输
+序列化：Hessian二进制序列化
+适用范围：传入传出参数数据包较小（建议小于100K），消费者比提供者个数多，单一消费者无法压满提供者，尽量不要用dubbo协议传输大文件或超大字符串。
+适用场景：常规远程服务方法调用
+
+Dubbo里使用到了Socket（采用apache mina框架做底层调用）来建立长连接，发送、接收数据，底层使用apache mina框架的IoSession进行发送消息。 
+Dubbo底层使用Socket发送消息的形式进行数据传递，结合了mina框架，使用IoSession.write()方法，
+这个方法调用后对于整个远程调用(从发出请求到接收到结果)来说是一个异步的，即对于当前线程来说，
+将请求发送出来，线程就可以往后执行了，至于服务端的结果，是服务端处理完成后，
+再以消息的形式发送给客户端的。
+
+基本原理如下：
+client一个线程调用远程接口，生成一个唯一的ID（比如一段随机字符串，UUID等），
+Dubbo是使用AtomicLong从0开始累计数字的
+将打包的方法调用信息（如调用的接口名称，方法名称，参数值列表等），和处理结果的回调对象callback，
+全部封装在一起，组成一个对象object
+向专门存放调用信息的全局ConcurrentHashMap里面put(ID, object)
+将ID和打包的方法调用信息封装成一对象connRequest，使用IoSession.write(connRequest)异步发送出去
+当前线程再使用callback的get()方法试图获取远程返回的结果，在get()内部，则使用synchronized
+获取回调对象callback的锁， 再先检测是否已经获取到结果，如果没有，然后调用callback的wait()方法，
+释放callback上的锁，让当前线程处于等待状态。
+服务端接收到请求并处理后，将结果（此结果中包含了前面的ID，即回传）发送给客户端，
+客户端socket连接上专门监听消息的线程收到消息，分析结果，取到ID，
+再从前面的ConcurrentHashMap里面get(ID)，从而找到callback，将方法调用结果设置到callback对象里。
+监听线程接着使用synchronized获取回调对象callback的锁（因为前面调用过wait()，
+那个线程已释放callback的锁了），再notifyAll()，唤醒前面处于等待状态的线程继续执行
+（callback的get()方法继续执行就能拿到调用结果了），至此，整个过程结束。
+
+DUBBO支持的各种协议
+http://blog.csdn.net/tanga842428/article/details/52717217

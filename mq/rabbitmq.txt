@@ -1,0 +1,50 @@
+安装
+linux安装包安装
+http://www.server110.com/linux/201704/32620.html
+yum安装
+http://blog.csdn.net/ffggnfgf/article/details/50554327
+windows安装
+http://blog.csdn.net/chwshuang/article/details/50543878 
+
+使用
+http://blog.csdn.net/xuwei198995/article/details/39378259
+http://www.cnblogs.com/LipeiNet/p/5977028.html
+
+windows
+键入rabbitmq-plugins enable rabbitmq_management启用监控管理
+rabbitmq-service stop//停止
+rabbitmq-service install//安装
+rabbitmq-service start//启动
+
+linux
+启动:service rabbitmq-server start
+关闭:service rabbitmq-server stop
+重启:service rabbitmq-server restart
+
+访问web监控地址
+http://localhost:15672/
+用户名guset
+密码guset
+访问端口：5672
+
+http://www.cnblogs.com/zlfoak/p/5521673.html
+
+RabbitMQ中，所有生产者提交的消息都由Exchange来接受，然后Exchange按照特定的
+策略转发到Queue进行存储
+
+RabbitMQ提供了四种Exchange：fanout,direct,topic,header
+
+header模式在实际使用中较少，本文只对前三种模式进行比较。
+
+性能排序：fanout > direct >> topic。比例大约为11：10：6
+
+任何发送到Direct Exchange的消息都会被转发到RouteKey中指定的Queue
+
+任何发送到Fanout Exchange的消息都会被转发到与该Exchange绑定(Binding)的所有Queue上。
+
+任何发送到Topic Exchange的消息都会被转发到所有关心RouteKey中指定话题的Queue上
+
+消息的消费者接收消息可以采用两种方式：
+
+  1、consumer.receive() 或 consumer.receive(int timeout)；
+  2、注册一个MessageListener

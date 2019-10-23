@@ -1,0 +1,17 @@
+编译跳过测试
+mvn clean install -Dmaven.test.skip=true 
+
+mvn deploy:deploy-file -DgroupId=com.sinoiov.lhjh.lhjh-common -DartifactId=lhjh-server-common -Dversion=1.0.0 -Dpackaging=jar -Dfile=D:\千方\CMS+决策引擎\百融\lhjh-server-common-1.0.0.jar -Durl=http://192.168.222.104:8081/repository/maven-releases/ -DrepositoryId=maven-releases
+
+其中-DgroupId 为上传的jar的groupId
+
+-DartifactId 为上传的jar的artifactId
+
+-Dversion 为上传的jar的需要被依赖的时候的版本号
+
+然后是-Dpackaging为jar，-Dfile为jar包路径 
+
+mvn deploy -Dmaven.test.skip
+
+mvn deploy:deploy-file -DgroupId=com.sinoiov.com -DartifactId=crm-base-interface -Dversion=1.0.0 -Dpackaging=jar -Dfile=D:\crm-base-interface-1.0.0.jar -Durl=http://172.17.4.59:8081/repository/maven-releases/ -DrepositoryId=maven-releases
+

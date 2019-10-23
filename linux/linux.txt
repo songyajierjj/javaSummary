@@ -1,0 +1,242 @@
+升级centos内核
+uname -r 查看内核
+升级内核
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+rpm -ivh http://www.elrepo.org/elrepo-release-6-5.el6.elrepo.noarch.rpm
+yum -y --enablerepo=elrepo-kernel install kernel-lt
+编辑配置文件/etc/grub.conf
+default=1改为default=0
+然后重启
+
+1、查看防火墙信息　/etc/init.d/iptables status
+2、关闭防火墙：　　/etc/init.d/iptables stop      或者    service iptables stop 
+3、开启防火墙   service iptables start
+4、重启防火墙  service iptables restart
+5、进入配置文件修改  vim /etc/sysconfig/iptables 
+
+关闭防火墙
+sudo iptables -F 
+
+重启网络
+service network restart
+
+强制关掉yum
+rm -f /var/run/yum.pid
+
+
+
+  scp是有Security的文件copy，基于ssh登录。操作起来比较方便，比如要把当前一个文件copy到远程另外一台主机上，可以如下命令。
+
+scp /home/daisy/full.tar.gz root@172.19.2.75:/home/root
+
+
+chown -R root 路径 改用户
+chgrp -R root 路径 改用户组
+
+统计一个字符串在一个日志或者文本文件中的出现次数？
+grep -o "string" file | wc -l
+
+linu下web验证码不显示
+1、修改${TOMCAT_HOME}/bin/catalina.sh (windows修改catalina.bat)。
+2、查找到-Djava.io.tmpdir="$CATALINA_TMPDIR"这行，
+3、并在这一行下加入：-Djava.awt.headless=true \，总共有7处需要添加。
+4、修改好“保存”再重启tomcat后网页的验证码就可以正确显示了。
+
+查看磁盘空间
+df -h
+du -lsh /opt查看文件所占用的空间
+
+https://www.cnblogs.com/peida/archive/2013/03/25/2980121.html
+查询并删除日志命令
+find /opt/webapps/tomcat-8080/logs/ -mtime +6 -name "*.log" -exec rm -rf {} \;
+
+创建一个.sh文件比如/opt/shell/autodel-tomcatlog-10daysago.sh，内容如上
+
+安装crontab
+
+yum install vixie-cron
+
+service crond status 查看状态
+service crond start启动
+service crond stop停止
+
+
+进入etc目录：
+vim crontab
+
+insert 
+0 1 * * * /opt/shell/autodel-tomcatlog-10daysago.sh
+保存退出，定时清理日志任务创建成功
+
+
+
+查看当前用户的定时任务
+crontab -u root -l
+
+增加了crontab任务后，在/var/spool/cron目录下会有一个当前登录账号命名的文件，可以删除和修改任务内容
+
+crontab的日志位置一般位于/var/log/cron
+/var/spool/mail/root
+
+top查看进程的情况
+pmap -d 进程号
+最后一行查询分配的内存和实际使用的内存
+
+vmstat
+linux系统下查看CPU、内存负载情况
+$ vmstat
+procs -----------memory---------- ---swap-- -----io---- --system-- -----cpu------
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 1  4 329796  26040   4528 3379824    1    1    50   160   36   17  2 10 85  3  0
+
+结果解释如下：
+
+procs
+r 列表示运行和等待cpu时间片的进程数，如果长期大于1，说明cpu不足，需要增加cpu。
+b 列表示在等待资源的进程数，比如正在等待I/O、或者内存交换等。
+cpu 表示cpu的使用状态
+us 列显示了用户方式下所花费 CPU 时间的百分比。us的值比较高时，说明用户进程消耗的cpu时间多，但是如果长期大于50%，需要考虑优化用户的程序。
+sy 列显示了内核进程所花费的cpu时间的百分比。这里us + sy的参考值为80%，如果us+sy 大于 80%说明可能存在CPU不足。
+wa 列显示了IO等待所占用的CPU时间的百分比。这里wa的参考值为30%，如果wa超过30%，说明IO等待严重，这可能是磁盘大量随机访问造成的，也可能磁盘或者磁盘访问控制器的带宽瓶颈造成的(主要是块操作)。 
+id 列显示了cpu处在空闲状态的时间百分比 
+system 显示采集间隔内发生的中断数
+in 列表示在某一时间间隔中观测到的每秒设备中断数。
+cs列表示每秒产生的上下文切换次数，如当 cs 比磁盘 I/O 和网络信息包速率高得多，都应进行进一步调查。
+memory
+swpd 切换到内存交换区的内存数量(k表示)。如果swpd的值不为0，或者比较大，比如超过了100m，只要si、so的值长期为0，系统性能还是正常 
+free 当前的空闲页面列表中内存数量(k表示) 
+buff 作为buffer cache的内存数量，一般对块设备的读写才需要缓冲。 
+cache: 作为page cache的内存数量，一般作为文件系统的cache，如果cache较大，说明用到cache的文件较多，如果此时IO中bi比较小，说明文件系统效率比较好。 
+swap
+si 由内存进入内存交换区数量。
+so由内存交换区进入内存数量。 
+IO
+bi 从块设备读入数据的总量（读磁盘）（每秒kb）。
+bo 块设备写入数据的总量（写磁盘）（每秒kb）
+
+
+
+在系统上执行：
+netstat -ntu | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n
+执行后,将会显示服务器上所有的每个IP多少个连接数
+
+查看端口被占用
+https://www.cnblogs.com/CEO-H/p/7794306.html
+lsof -i
+lsof -i 用以显示符合条件的进程情况，lsof(list open files)是一个列出当前系统打开文件的工具
+lsof -i:端口号
+lsof -i:端口号，用于查看某一端口的占用情况，比如查看22号端口使用情况
+
+查看socket使用总量
+cat /proc/net/sockstat
+
+sockets: used 294
+TCP: inuse 35 orphan 0 tw 0 alloc 45 mem 1
+UDP: inuse 13 mem 2
+UDPLITE: inuse 0
+RAW: inuse 4
+FRAG: inuse 0 memory 0
+
+sockets: used：已使用的所有协议套接字总量
+TCP: inuse：正在使用（正在侦听）的TCP套接字数量。其值≤ netstat –lnt | grep ^tcp | wc –l
+TCP: orphan：无主（不属于任何进程）的TCP连接数（无用、待销毁的TCP socket数）
+TCP: tw：等待关闭的TCP连接数。其值等于netstat –ant | grep TIME_WAIT | wc –l
+TCP：alloc(allocated)：已分配（已建立、已申请到sk_buff）的TCP套接字数量。其值等于netstat –ant | grep ^tcp | wc –l
+TCP：mem：套接字缓冲区使用量（单位不详。用scp实测，速度在4803.9kB/s时：其值=11，netstat –ant 中相应的22端口的Recv-Q＝0，Send-Q≈400）
+UDP：inuse：正在使用的UDP套接字数量
+RAW：
+FRAG：使用的IP段数量
+
+ss -a
+
+netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
+
+如何尽量处理TIMEWAIT过多
+如发现系统存在大量TIME_WAIT状态的连接，通过调整内核参数解决：
+编辑文件/etc/sysctl.conf，加入以下内容：
+
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_fin_timeout = 30
+然后执行 /sbin/sysctl -p 让参数生效。
+
+net.ipv4.tcp_syncookies = 1 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭；
+net.ipv4.tcp_tw_reuse = 1 表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；
+net.ipv4.tcp_tw_recycle = 1 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。
+net.ipv4.tcp_fin_timeout 修改系默认的 TIMEOUT 时间
+
+#查看系统本地可用端口极限值 
+cat /proc/sys/net/ipv4/ip_local_port_range 
+
+查看默认的MSL值（60s）：
+
+[root@DanCentOS65var]# cat /proc/sys/net/ipv4/tcp_fin_timeout
+
+60
+
+修改默认60为120：
+
+[root@DanCentOS65var]# echo 120 > /proc/sys/net/ipv4/tcp_fin_timeout
+
+修改完成后，重新加载配置文件：
+
+[root@DanCentOS65var]# sysctl -p /etc/sysctl.conf
+
+查看是否已经生效：
+
+[root@DanCentOS65var]# sysctl -a | grep fin
+
+net.ipv4.tcp_fin_timeout= 120
+
+cat /proc/meminfo
+
+阿里云磁盘挂载
+https://yq.aliyun.com/articles/7804?spm=5176.10695662.1996646101.searchclickresult.4de945d5kLJ2hs
+
+yum install telnet
+yum install telnet-server
+vi /etc/xinetd.d/telnet
+
+修改disable = yes 为disable = no
+
+service xinetd restart
+
+ll /etc/localtime
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+1. 查看时间和日期
+命令 ： "date"
+
+2.设置时间和日期
+例如：将系统日期设定成2009年11月3日的命令
+
+命令 ： "date -s 11/03/2009"
+
+将系统时间设定成下午5点55分55秒的命令
+
+命令 ： "date -s 17:55:55"
+
+执行tzselect命令-->选择Asia-->选择China-->选择east China - Beijing, Guangdong, Shanghai, etc-->然后输入1
+
+lvdisplay
+mount /dev/qf/mylv /opt/
+
+#free -m
+total 内存总数
+used 已经使用的内存数
+free 空闲的内存数
+shared 多个进程共享的内存总额
+buffers Buffer Cache和cached Page Cache 磁盘缓存的大小
+-buffers/cache (已用)的内存数:used - buffers - cached
++buffers/cache(可用)的内存数:free + buffers + cached
+可用的memory=free memory+buffers+cached
+
+/proc是一个虚拟文件系统，我们可以通过对它的读写操作做为与kernel实体间进行通信的一种手段。也就是说可以通过修改/proc中的文件
+，来对当前kernel的行为做出调整。那么我们可以通过调整/proc/sys/vm/drop_caches来释放内存。操作如下
+# cat /proc/sys/vm/drop_caches
+/proc/sys/vm/drop_caches的值，默认为0。
+手动执行sync命令（描述：sync 命令运行 sync 子例程。如果必须停止系统，则运行sync 命令以确保文件系统的完整性。
+sync 命令将所有未写的系统缓冲区写到磁盘中，包含已修改的 i-node、已延迟的块 I/O 和读写映射文件）
+# echo 3 > /proc/sys/vm/drop_caches
+# cat /proc/sys/vm/drop_caches
+

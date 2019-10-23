@@ -1,0 +1,9 @@
+http://www.linuxidc.com/Linux/2016-08/134617.htm
+
+/usr/local/nexus/nexus-2.11.2-03/bin/nexus start
+
+http://192.168.223.40:8081/nexus,登录：用户名admin  默认密码：admin123
+
+mvn deploy:deploy-file -DgroupId=cn.yw.third -DartifactId=yw_third_base -Dversion=1.0.7 -Dpackaging=jar -Dfile=D:\yw_third_base-1.0.7.jar -Durl=http://192.168.105.174:8081/repository/maven-releases/ -DrepositoryId=maven-releases 
+mvn deploy:deploy-file -DgroupId=cn.yw.third -DartifactId=yw_third_br -Dversion=1.0.7 -Dpackaging=jar -Dfile=D:\yw_third_br-1.0.7.jar -Durl=http://192.168.105.174:8081/repository/maven-releases/ -DrepositoryId=maven-releases 
+mvn deploy:deploy-file -DgroupId=cn.yw.third -DartifactId=yw_third_rh -Dversion=1.0.7 -Dpackaging=jar -Dfile=D:\yw_third_rh-1.0.7.jar -Durl=http://192.168.105.174:8081/repository/maven-releases/ -DrepositoryId=maven-releases 

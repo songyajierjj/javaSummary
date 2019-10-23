@@ -1,0 +1,158 @@
+﻿linux下安装
+http://www.cnblogs.com/xiaoqian1993/p/5936648.html
+
+创建data文件夹
+创建logs文件
+
+bin/mongod --dbpath=data --logpath=logs --logappend --port=27017 --fork
+bin/mongod --dbpath=data --logpath=logs --logappend --port=27017 --auth --fork
+
+导出
+mongodump -h IP --port 端口 -u 用户名 -p 密码 -d 数据库 -o 文件存在路径
+导入
+mongorestore -h IP --port 端口 -u 用户名 -p 密码 -d 数据库 --drop 文件存在路径
+
+导出json
+./mongoexport -d cms -c xinYanOperator -o /opt/xinYanOperator.json --type json
+./mongoexport -d cms -c xinYanOperator -o /opt/xinYanOperator.csv --type csv -f 字段名1，2，3
+
+mongod --dbpath D:\program\mongodb\data 启动
+mongo.exe ip:port/用户  默认test,可以用admin
+use dbname 创建一个数据库，如果不操作直接退出的话则会自动删除，除非追加一个list即文档
+use test 创建一个test的数据库
+db.test.insert({name:"yjsong"}) 插入一条test文档，会默认插入_id，作为该数据的唯一标示
+show dbs 查看所有数据库
+show collections 查看数据库的所有文档
+db.test.find() 查看文档的内容
+db.test.findOne() 查看文档的第一条内容
+db.test.update({name:"yjsong"},{$set:{name:"syj"}}) 根据条件更新，将name为yjsong的更新为syj
+db.test.remove({name:"syj"}) 根据条件删除
+db.test.remove() 删除所有的列
+db.test.drop() 删除文档
+db.dropDatabase() 删除数据库
+db.help() 数据库的帮助命令
+db.getName() 获取数据库名称
+db.stats() 数据库状态
+db.test.help() 数据库文档的帮助命令
+					     插入或者更新        批量更新，否则只更新第一条
+db.[documentName].update({查询器},{修改器},     true        ,          true  )
+
+$set 更新值
+$inc 增加值
+$unset 删除指定的值
+$push 增加数组值
+$pop 从指定数组删除一个值，1删除最后一个值，-1删除第一个值
+$pull 删除一个指定的值
+$pullAll 删除多个值
+{$pop:{name:1})
+
+db.test.insert({name:["one","two","three","four","five","six"],id:"1"})
+db.test.update({id:"1"},{$pop:{name:1}}) 删除最后一个值
+db.test.update({id:"1"},{$pull:{name:"one"}}) 删除一个指定值
+db.test.update({id:"1"},{$pullAll:{name:["two","three"]}}) 删除多个值
+
+查询：指定返回的键
+db.test.find({查询条件},{_Id:0,name:1})
+ 0表示不查出，1表示查出，默认查出_Id
+
+ 查询条件
+ db.test.find({age:{$lt:25}}) 查询age小于25的
+ $lt <  
+ $lte <=
+ $gt >
+ $gte >=
+ $ne =
+ $in 包含  db.test.find({age:{$in:["3","423"]}})
+ $nin 不包含 db.test.find({age:{$nin:["3","423"]}})
+ $or 或者 db.test.find({$or:[{c:{$gt:80}},{e:{$gt:90}}]}) 查询c值大于80或者e的值大于90
+
+ null db.test.find({sex:{$in:[null]}})
+正则查询
+db.test.find({name:/test/}) 查询出名字包含test的
+
+$not 取反操作
+$not可以用在任何地方，$nin只能用在集合上
+db.test.find({name:{$not:/test/}})
+
+查询name数组中有four,five,six的数据
+db.test.find({name:{$all:["four","five","six"]}})
+
+查询name数组中第二个元素为four的数据
+db.test.find({"name.1":"four"})
+
+$size
+查询name数组长度为4的数据
+db.test.find({name:{$size:4}})
+ 
+ $slice操作符返回文档中指定数组的内部值
+ 查询jim书架上第2到4本书
+ db.test.find({name:"jim"},{books:{$slice:[1,3]}})
+ 查询最后一本书
+ db.test.find({name:"jim"},{books:{$slice:-1}})
+文档查询
+单条件查询
+db.test.find({school:{$elemMatch:{school:"k",score:"A"}}})
+
+$where查询 万能查询，特别消耗性能
+
+db.test.find().limit(5):查询前五条数据
+db.test.find().limit(5).skip(5)从第6条数据开始之后的5条数据  skip性能不太好
+db.test.find().limit(5).skip(5).sort({age:1}) 1正序，-1倒序
+
+排序顺序
+最小值-null-数字-字符串-对象/文档-数组-二进制-对象ID-布尔-日期-时间戳-正则-最大值
+
+将mongodb 写入windows 服务：
+          1.    以管理员身份打开cmd 窗口， （非常重要，否则会报错）
+	  2.   进入到mongod的bin目录下面
+          3.   输入：mongod.exe --logpath D:\mongodb\logs\mongodb.log --logappend --dbpath D:\mongodb\data --directoryperdb --serviceName MongoDB --install
+8. 在cmd 中输入： services.msc 打开服务列表，查看即可
+
+
+mongoexport -h dbhost -d dbname -c collectionName -o output
+
+　　　　参数说明:
+　　　　-h 数据库地址
+　　　　-d 指明使用的库
+　　　　-c 指明要导出的集合
+　　　　-o 指明要导出的文件名（文件支持多种格式，如txt,wps,xls等）
+
+　　　　具体示例：　　
+
+　　　　mongoexport -h localhost:27017 -d kaiye -c c2 -o C://mongoexport/test.txt
+
+　　　　mongoexport -h localhost:27017 -d kaiye -c c2 -o C://mongoexport/test.wps
+
+　　　　mongoexport -h localhost:27017 -d kaiye -c c2 -o C://mongoexport/test.xls
+
+mongoimport -h dbhost -d dbname -c collectionname input
+　　　　参数说明:
+　　　　-h 数据库地址
+　　　　-d 指明使用的库
+　　　　-c 指明要导入的集合（mongodb本身支持隐式创建，故事先无需创建集合）
+　　　　input 文件的地址
+
+　　　　具体示例：　　　
+
+　　　　mongoimport -h localhost:27017 -d kaiye -c fuck C://mongoexport/test.txt
+
+　　　　mongoimport -h localhost:27017 -d kaiye -c fuck1 C://mongoexport/test.wps
+
+　　　　mongoimport -h localhost:27017 -d kaiye -c fuck2 C://mongoexport/test.xls
+远程连接
+mongo 20.0.15.42:30000
+模糊查询like '201809%' = /^201809/ 
+like '%201809%' = /201809/
+
+db.bairongSpecialList.find({createTime:{$regex:/^2018-10/}});
+db.xinYanOperator.find({tradeDate:{$regex:/^201810/},fee:'Y'});
+db.xinYanRadar.find({tradeDate:{$regex:/^201809/},fee:'Y'});
+
+db.bairongSpecialList.count({swift_number:{$regex:/^3000766_201806/},code:'00'});
+db.bairongApplyLoanStr.count({swift_number:{$regex:/^3000766_201811/},code:'00'});
+db.bairongExecution.count({swift_number:{$regex:/^3000766_201811/},code:'00'});
+
+db.xinYanOperator.count({tradeDate:{$regex:/^201810/},fee:'Y'});
+db.xinYanRadar.count({tradeDate:{$regex:/^201810/},fee:'Y'});
+db.yiXinCreditEvaluationCustomized.count({tradeDate:{$regex:/^201903/},code:'10000',success:true});
+db.yiXinFraudScreeningBase.count({tradeDate:{$regex:/^201903/},code:'10000'});

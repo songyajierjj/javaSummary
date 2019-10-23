@@ -1,0 +1,13 @@
+安装
+http://www.linuxidc.com/Linux/2016-07/133283.htm 
+
+http://blog.csdn.net/wjg_ww/article/details/49924353
+
+设置反向代理
+http://www.jb51.net/article/81131.htm
+
+windows下安装
+http://www.cnblogs.com/chuncn/archive/2011/10/14/2212291.html
+
+linux安装
+https://www.cnblogs.com/jimisun/p/8057156.html

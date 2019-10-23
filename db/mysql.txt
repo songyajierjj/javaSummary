@@ -1,0 +1,127 @@
+mysql免安装版教程
+http://www.cnblogs.com/mr-wid/archive/2013/05/09/3068229.html
+
+
+进入bin目录下安装
+安装
+mysqld -install
+卸载
+mysqld -remove
+如果没有data文件夹则用下面的命令初始化
+mysqld --initialize-insecure 
+mysqld --initialize-insecure --user=mysql
+
+
+
+sc delete mysql;
+
+启动,进入CMD下面
+net start mysql
+停止
+net stop mysql
+
+
+mysqladmin shutdown
+
+mysqladmin start
+如果启动不成功删除data下面的logfile*和data
+
+出现Table 'performance_schema.session_status' doesn't exist错误，解决办法
+mysql_upgrade -u root -p --force
+
+
+让mysql不载入权限表，命令：mysqld --skip-grant-tables（windows）
+rpm方式安装和卸载mysql
+http://www.jb51.net/LINUXjishu/38727.html
+
+//查看安装的服务
+rpm -qa|grep -i mysql
+
+rpm -ev 服务名 卸载安装的服务
+
+
+//linux yum安装mysql
+http://blog.csdn.net/fyq891014/article/details/17360245
+
+1查看yum版本信息
+yum list | grep mysql
+2yum安装
+yum install -y mysql-server mysql mysql-deve
+3查看安装版本
+rpm -qi mysql-server 
+4启动数据库
+service mysqld start
+5重启命令
+service mysqld restart	
+6设置开机启动
+chkconfig mysqld on
+7设置用户密码
+mysqladmin -u root password 'root'
+8登陆数据库
+mysql -u root -p
+
+但此时我们仍不能访问，因为mysql没有授权远程用户
+如，你想root2使用root2从任何主机连接到mysql服务器的话。 
+切换到mysql中
+　　mysql>GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'IDENTIFIED BY 'root' WITH GRANT OPTION; 
+　　或者如果你想允许用户myuser从ip为192.168.1.6的主机连接到mysql服务器，并使用mypassword作为密码 
+　　mysql>GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'192.168.1.3'IDENTIFIED BY 'mypassword' WITH GRANT OPTION; 
+　　然后执行：
+mysql>FLUSH RIVILEGES;
+mysql>exit;
+　　使修改生效.
+
+性能优化
+http://www.jb51.net/article/24392.htm
+
+http://blog.csdn.net/ofreelander/article/details/50802780
+5.7.19 安装
+http://blog.csdn.net/wolf_love666/article/details/76155001
+初始化
+bin/mysqld --defaults-file=/opt/mysql/my.cnf --initialize --user=mysqlosf 
+启动
+bin/mysqld_safe --user=root & 
+
+bin/mysqld_safe --defaults-file=/opt/mysql/my.cnf --user=root &
+
+_t1qBw*E9pcc
+
+dedydh;&-0rU
+
+导出
+mysqldump -uroot -p risk-cms > risk-cms.sql
+
+导入
+进入mysql
+source 文件目录
+
+查看区分大小写
+show variables like '%case_table%';
+
+https://www.cnblogs.com/tgycoder/p/5410057.html
+
+https://jingyan.baidu.com/article/454316ab07e522f7a7c03a2c.html
+查看是否开启慢日志
+show variables like 'slow_query%';
+| slow_query_log      | OFF                                |
+| slow_query_log_file | /opt/mysql/data/localhost-slow.log 
+查看设置多长时间算慢sql，单位秒，默认10,
+show variables like 'long_query_time';
+ long_query_time | 10.000000 |
+
+SHOW VARIABLES LIKE '%AUTOCOMMIT%';
+set autocommit = 0;
+
+pt-query-digest查询日志分析工具
+
+登录10.132.3.38服务器
+	mysqldump -uroot -pPu90AkO4eudmF8PU dc | gzip > dc.sql.gz
+推送到ladybird服务器
+	scp -l 15000 dc.sql.gz root@ladybird.awservice.net:/data
+	密码：5T2kd6&ei3S%xsHZ
+登录ladybird服务器，解压导入
+	gunzip dc.sql.gz
+	mysql -uroot -ptest@AWS423% dc < dc.sql
+
+mysql rpm安装
+https://www.jb51.net/article/108425.htm

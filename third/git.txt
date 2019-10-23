@@ -1,0 +1,24 @@
+git add . 添加所有的文件
+git add --all 添加所有文件
+git add * 添加所有文件包含忽略的文件
+git add 文件夹名
+git add 文件夹名/*
+
+git commit -m '提交注释'
+
+git branch -a 查看当前所在分支
+git checkout -b dev 创建一个dev分支并切换到新分支
+git branch dev 创建一个分支
+git checkout dev 切换到分支
+git branch -v 查看各个分支最后一个提交对象的信息
+git branch --merged 查看哪些分支已被并入当前分支
+git branch -d 分支名称 列表中没有 * 的分支通常都可以用 来删掉，如果分支未合并，-D强制删除
+git branch --no-merged 查看尚未合并的工作
+git branch -d testing
+
+git remote 不带参数，列出已经存在的远程分支
+git remote -v 或者  --verbose  列出详细信息，在每一个名字后面列出其远程url
+
+
+
+

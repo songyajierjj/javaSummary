@@ -1,0 +1,307 @@
+﻿安装
+下载redis-3.2.8.tar.gz
+解压
+进入到 redis-3.2.8
+执行 make命令
+执行完成后 进入到src文件夹，执行make install
+
+redis集群搭建
+http://www.cnblogs.com/wuxl360/p/5920330.html
+
+http://blog.csdn.net/dc_726/article/details/48552531
+
+
+redis-server 启动redis
+redis-server redis.conf 按照配置文件启动
+./redis-cli shutdown  
+pkill reids-server
+redis-cli 连接redis 默认本地6379端口
+redis-cli -h 192.168.40.46 -p 7000
+创建集群
+redis-trib.rb  create  --replicas  1  192.168.31.245:7000 192.168.31.245:7001  
+192.168.31.245:7002 192.168.31.210:7003  192.168.31.210:7004  192.168.31.210:7005
+redis-cli -h 192.168.40.46 -c -p 7000 -c表示可连接到集群
+
+
+
+redis.conf配置文件
+参数配置
+daemonize；是否在后台运行，yes
+pidfile:配置多个pid的地址
+bind:绑定ip，设置只接收该IP的请求
+port:端口，默认6379
+timeout:客户端连接超时时间，默认是秒
+loglevel:日志等级，4级，debug,verbose,notice,warning
+logfile:log文件地址
+database:设置数据库个数，默认使用0数据库 
+save:数据库镜像备份的频率
+rdbcompression:镜像备份时是否压缩
+dbfilename：镜像备份的文件名
+dir:数据库镜像备份文件的路径
+slaveof:设置数据库为其它数据库的从库
+masterauth:主数据库连接时的密码
+requirepass:设置连接时需要的密码
+maxclients:设置最大的连接数
+maxmemory:设置最大的使用内存
+appendonly:开启appendonly模式
+appendfsync:设置对appendonly.aof文件同步的频率
+vm-enabled:是否开启虚拟内存支持
+vm-swap-fil：设置虚拟内存的交换文件路径
+vm-max-memory:设置使用的最大物理内存
+vm-page-size:设置虚拟内存的页大小
+vm-page：设置交换文件的总page的数量
+vm-max-threads:设置vmio同时使用的线程数量
+cluster-enabled：是否开启集群
+
+
+
+字符串string
+redis 127.0.0.1:6379> set name "yjsong" //设置字符串key值
+OK
+redis 127.0.0.1:6379> get name
+"yjsong"
+redis 127.0.0.1:6379> del name 删除name键
+(integer) 1
+setnx name sss 如果name存在则失败
+setex haircolor 10 red 设置haircolor为red,10秒有效期
+setrange name 6 gmail.com 从第六个字符开始替换，第一个字符为0
+name = lijie@126.com 替换之后 lijie@gmail.com
+mset 批量设置，成功返回OK,失败返回0，所有都失败
+msetnx 同setnx，效果不能覆盖，如果失败则全部是吧
+getset 设置key的值，并返回旧的值
+getrange name 0 5 从下表0到5的字符，共6个
+mget 批量获取
+incr 自增+1，只能对value是整数的值，否则报错
+incyby key6 6 对key6自增6次
+decr 自减-1，同incr
+decrby key6 自减多次
+append 增加字符
+strlen 查看长度
+
+
+哈希hash
+       表名   field    value  field   value   field value
+HMSET user:1 username yiibai password yiibai points 200
+OK
+HGETALL user:1 得到所有
+1) "username"
+2) "yiibai"
+3) "password"
+4) "yiibai"
+5) "points"
+6) "200"
+hget user:1 username 得到username的值
+1) "yiibai"
+hset user:001 name lijie
+hget user:001 name
+hsetnx 如果不存在设置成功，以表名为唯一标示
+hmset user:001 name lijie age 10 score 100 批量设置
+hincrby user:001 age 5 给field加5
+hexists user:001 age field是否存在，1存在，0不存在
+hlen user:001 返回user:001里面field的个数，
+hdel user:001 age 删除指定hash的field
+hkeys user:001 返回hash所有的field
+hvalue user:001 返回hash所有的value
+hgetall user:001 返回所有的field和value
+
+
+
+列表list
+
+lpush mylist world 从头部压如元素
+lpush mylist hello
+lrange mylist 0 -1 从头取到尾 hello world
+rpush 从尾部压如元素
+linsert mylist before hello hi 在hello之前插入
+linsert mylist after world hi 在world之后插入
+lset mylist 1 world 将坐标为1的元素替换为world
+lrem mylist 3 hi 将value为hi的元素删除3个，返回删除的个数，如果只有2个，删除4个，则返回2，代表只删除了2个
+ltrim mylist 1 2 保留指定位置的数据
+lpop mylist 从头部删除元素，返回删除的元素值
+rpop mylist 从尾部删除元素，返回删除的元素值
+rpoplpush list1 list2 从list1尾部弹出元素压入list2
+lindex mylist 1 返回下标为1的位置的元素
+llen mylist 返回list元素的个数
+
+集合set
+sadd myset one 给集合myset添加一个元素
+smembers myset 查看集合myset的元素
+srem myset one 删除myset的元素
+spop myset 随机删除一个元素
+sdiff myset1 myset2 返回myset1有myset2没有的
+sdiffstore myset3 myset1 myset2 讲myset1有myset2没有的值存到myset3里面
+sinter myset1 myset2 取交集
+sinterstore myset3 myset1 myset2 取1和2的交集存到3
+sunion myset1 myset2 取并集
+sunion myset3 myset1 myset2  取并集放到myset3里面
+smove myset1 myset2 one 从myset1移除one到myset2里面
+scard myset1 返回myset1的元素个数
+sismember myset one 判断元素one是否属于myset集合1是0否
+srandmember myset 随机返回一个元素
+
+
+有序集合zset
+          顺序 值
+zadd myset  1  one
+zrange myzset 0 -1 查看所有元素
+zrange myzset 0 -1 withscores 查看所有元素并显示顺序
+zrem myzset one 删除
+zincrby myzset 2 one 对one的顺序值增加2，查看的时候one会在two后面
+zrank myzset one 返回元素对应的下标值
+zrevrank myzset
+zrangebyscore myzset 2 3 withscores 返回给定区间的元素
+zcount myzset 2 3 返回给定区间的数量
+zcard myzset 返回所有元素
+zremrangebyrank myzset 1 2 删除指定区间的元素按索引
+
+
+Redis HyperLogLog
+Redis HyperLogLog 是用来做基数统计的算法，HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，
+计算基数所需的空间总是固定 的、并且是很小的。
+
+在 Redis 里面，每个 HyperLogLog 键只需要花费 12 KB 内存，就可以计算接近 2^64 个不同元素的基 数。这和计算基数时，
+元素越多耗费内存就越多的集合形成鲜明对比。但是，因为 HyperLogLog 只会根据输入元素来计算基数，而不会储存输入元素本身，
+所以 HyperLogLog 不能像集合那样，返回输入的各个元素。
+
+redis 127.0.0.1:6379> PFADD tutorials "redis"
+
+1) (integer) 1
+
+redis 127.0.0.1:6379> PFADD tutorials "mongodb"
+
+1) (integer) 1
+
+redis 127.0.0.1:6379> PFADD tutorials "mysql"
+
+1) (integer) 1
+
+redis 127.0.0.1:6379> PFCOUNT tutorials
+
+(integer) 3
+
+Redis发布订阅
+Redis订阅和发布实现了通讯系统，发件人（在 Redis 中的术语称为发布者）发送邮件，
+而接收器（订户）接收它们。信息传输的链路称为通道。Redis 一个客户端可以订阅任意数量的通道。
+一个客户端订阅的通道命名 redisChat 。
+redis 127.0.0.1:6379> SUBSCRIBE redisChat 客户端1
+
+Reading messages... (press Ctrl-C to quit)
+1) "subscribe"
+2) "redisChat"
+3) (integer) 1
+
+现在，两个客户端都在同一个通道名：redisChat 上发布消息，上述订阅客户端接收消息。
+redis 127.0.0.1:6379> PUBLISH redisChat "Redis is a great caching technique" 客户端2
+
+(integer) 1
+
+redis 127.0.0.1:6379> PUBLISH redisChat "Learn redis by tutorials point" 客户端3
+
+(integer) 1
+
+客户端1的接收信息
+1) "message"
+2) "redisChat"
+3) "Redis is a great caching technique"
+1) "message"
+2) "redisChat"
+3) "Learn redis by tutorials point"
+
+
+
+
+服务器命令
+keys *
+keys my* 模糊匹配
+exists name 判断key是否存在
+del name 删除一个key
+expire name 10 设置key的过期时间
+ttl name 查看还有多长时间过期 -1 表示没有过期时间
+move age 1 将当期数据库的key移动到1数据库
+select 1 选择数据库默认为0
+persist 移除过期时间
+randomkey 随机返回一个key
+rename name newname 重命名一个key
+type name 返回key的类型
+ping 测试连接是否存在，正常返回pong
+echo age 打印age
+quit exit 退出连接
+dbsize 返回所有key的数量
+info 获取服务器的信息
+
+config get * //获取所有配置
+config set 配置名 //获取当前的配置属性
+config set 配置名 配置属性 //设置配置的属性
+
+flushdb  清空当前的数据库
+flushall 清空所有的数据库
+
+
+redis-cli -a password
+redis-cli
+auth password
+
+Redis事务
+Redis事务允许一组命令在单一步骤中执行。事务有两个属性，说明如下：
+在一个事务中的所有命令作为单个独立的操作顺序执行。在Redis事务中的执行过程中而另一客户机发出的请求，这是不可以的；
+Redis事务是原子的。原子意味着要么所有的命令都执行，要么都不执行；
+Redis 事务由指令 MULTI 发起的，之后传递需要在事务中和整个事务中，最后由 EXEC 命令执行所有命令的列表。
+redis 127.0.0.1:6379> MULTI
+OK
+redis 127.0.0.1:6379> SET name redis
+QUEUED
+redis 127.0.0.1:6379> GET name
+QUEUED
+redis 127.0.0.1:6379> INCR name
+QUEUED
+redis 127.0.0.1:6379> set name mongo
+QUEUED
+redis 127.0.0.1:6379> EXEC
+1) OK
+2) "redis"
+3) (error) ERR value is no an integer or out of range
+4) "mongo"
+其中一个命令报错的话不会回滚，还会继续执行之后的命令。
+watch age 之后，如果age在其它地方被操作，则exec执行失效
+multi 开始
+exec 执行
+discard 取消执行
+
+
+持久化机制
+经常将内存数据同步到硬盘
+1、快照 snapshotting（默认） 数据库存到文件
+2、append-only file （aof）方式 操作存到文件
+
+save 90 10 在90秒内超过10个key修改做快照
+缺点：有间隔，或造成数据丢失
+
+aof比快照更有持久性，每次都将操作命令写到文件，更安全
+
+appendonly yes 启用aof方式
+appendfsync always //收到命令立即写入磁盘，最慢，保证完全持久化
+            everysec //每秒写一次，折中
+	    no    //完全依赖os,性能最好，持久化不保证。
+redis-cli save 备份
+redis-cli shutdown 停止
+redis-check-aof 验证aof文件
+redis-check-dump 验证快照
+redis-benchmark -cl -q 性能测试
+         -cl只使用一个客户端测试
+	 -q简化输出结果
+
+
+
+config set activedefrag yes 整理内存碎片
+info memory查看内存
+
+
+
+
+
+
+
+
+
+
+

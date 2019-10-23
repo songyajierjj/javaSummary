@@ -1,0 +1,3 @@
+cxf生成客户端代码apache-cxf-2.1.4
+进入bin目录
+wsdl2java -p com.ctfo.microcredit.creditxinjia.cxf -d D:\download\src url 

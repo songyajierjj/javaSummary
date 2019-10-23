@@ -1,0 +1,115 @@
+http://www.cnblogs.com/Leo_wl/p/5035437.html
+
+1. $sudo yum upgrade device-mapper-libs
+
+2.$ sudo yum install docker-io  (如果提示   "No package docker-io available"说明不能连接epel库，
+则需要执行 $ sudo yum install http://mirrors.yun-idc.com/epel/6/i386/epel-release-6-8.noarch.rpm
+后再安装docker-io）
+
+http://blog.csdn.net/fgf00/article/details/51893771
+
+yum install -y epel-release
+yum install docker-io # 安装docker
+# 配置文件 /etc/sysconfig/docker
+
+chkconfig docker on  # 加入开机启动
+由于官方不推荐使用lxc
+other_args="-exec-driver=lxc --selinux-enabled"  
+# 删除--exec-driver=lxc即可，改为  
+other_args="--selinux-enabled"  
+
+service docker start # 启动docker服务
+service docker stop  # 停止docker服务
+service docker status #查看docker状态
+
+# 基本信息查看
+docker version # 查看docker的版本号，包括客户端、服务端、依赖的Go等
+docker info # 查看系统(docker)层面信息，包括管理的images, containers数等
+docker pull centos 下载
+docker images [ centos ] 查看
+docker run -i -t centos /bin/bash
+
+docker pull ubuntu:latest ubuntu的镜像下载
+# 搜索镜像
+docker search <image> # 在docker index中搜索image
+# 下载镜像
+docker pull <image>  # 从docker registry server 中下拉image
+# 查看镜像 
+    docker images： # 列出images
+    docker images -a # 列出所有的images（包含历史）
+    docker rmi  <image ID>： # 删除一个或多个image
+
+
+
+
+# 使用镜像创建容器
+docker run <相关参数> <镜像 ID> <初始命令>
+
+-i：表示以“交互模式”运行容器
+-t：表示容器启动后会进入其命令行
+-v：表示需要将本地哪个目录挂载到容器中，
+格式：-v <宿主机目录>:<容器目录>
+
+docker run -i -t ubuntu
+
+# 创建一个容器，让其中运行 bash 应用，退出后容器关闭
+docker run -i -t ubuntu /bin/bash 
+
+#创建一个名称centos_aways的容器，自动重启
+docker run -itd --name centos_aways --restart=always centos 
+
+# --restart参数：always始终重启；on-failure退出状态非0时重启；默认为，no不重启
+
+# 查看容器
+    docker ps ：列出当前所有正在运行的container
+    docker ps -l ：列出最近一次启动的container
+    docker ps -a ：列出所有的container（包含历史，即运行过的container）
+    docker ps -q ：列出最近一次运行的container ID
+# 再次启动容器
+    docker start/stop/restart <container> #：开启/停止/重启container
+    docker start [container_id] #：再次运行某个container （包括历史container）
+# 进入正在运行的docker容器
+    docker exec -it [container_id] /bin/bash
+    docker attach [container_id]
+# 创建一个容器映射 HOST 端口到容器，方便外部访问容器内服务，host_port 可以省略
+，省略表示把 container_port 映射到一个动态端口。
+    docker run -i -t -p <host_port:contain_port>
+
+# 删除容器
+    docker rm <container...> #：删除一个或多个container
+    docker rm `docker ps -a -q` #：删除所有的container 波浪线下面的`
+    docker ps -a -q | xargs docker rm #：同上, 删除所有的container
+
+run创建容器：docker run -itd
+create创建： docker create -it
+    -t, --tty                       Allocate a pseudo-TTY
+    -i, --interactive               Keep STDIN open even if not attached
+    -d, --detach                    Run container in background and print container ID #run的参数
+
+-m 1024m --memory-swap=1024m  # 限制内存最大使用（bug：超过后进程被杀死）
+--cpuset-cpus="0,1"           # 限制容器使用CPU
+
+将容器封装为一个镜像
+docker commit (容器名/ID) node:node1(新的镜像名)
+
+基于新镜像运行容器
+docker run -it -d -p 88:80 --name test1 node:node1 /bin/bash
+-p为端口映射
+
+
+root@testserver4 ~]# docker exec -ti e38bc81e2a8b /bin/bash
+Error response from daemon: Unsupported: Exec is not supported by the lxc driver
+其实官方已经早就不推荐使用lxc了，所以只要去掉启动参数设置的lxc选项即可
+vim  /etc/sysconfig/Docker  
+------------  
+other_args="-exec-driver=lxc --selinux-enabled"  
+# 删除--exec-driver=lxc即可，改为  
+other_args="--selinux-enabled"  
+------------  
+重启service docker restart在连接一次就可以了
+
+
+brctl delbr docker0
+sudo brctl show
+
+

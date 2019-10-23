@@ -1,0 +1,673 @@
+String类为什么是final的
+1 主要是为了“效率” 和 “安全性” 的缘故。若 String允许被继承, 
+由于它的高度被使用率, 可能会降低程序的性能，所以String被定义成final。
+2、不允许其他类继承。这个应该不是最终原因，但这里权且也当成是一个原因。
+3、 String类中的成员属性也几乎都设计成了private final的，这样String就被设计成一个不变类，
+这样有助于共享，提高性能。可以将字符串对象保存在字符串常量池中以供与字面值相同字符串对象共 享。
+如果String对象是可变的，那就不能这样共享，因为一旦对某一个String类型变量引用的对象值改变，
+将同时改变一起共享字符串对象的其他 String类型变量所引用的对象的值。
+4、String被设计为不变类，其中的offset，value[]都被设计成private final的，这样在多线程时，
+对String对象的访问是可以保证安全的。java程序语言的许多特性依赖于不可变的String对象。
+
+HashMap和Hashtable的区别
+http://blog.csdn.net/u011202334/article/details/51496381
+HashMap是非线程安全的，Hashtable是线程安全的。
+HashMap的键值都可以为null，Hashtable的键和值都不可以为null值。
+HashMap继承自AbstractMap类，Hashtable继承自Dictionary类。
+ps : Properties类继承自Hashtable类。
+Hashtable是对整个hash表进行锁定
+ConcurrentHashMap是讲hash表分成16份，每次调用是对其中的一个加锁，更有效率
+
+HashMap和Hashtable的底层实现都是数组+链表结构实现的，这点上完全一致
+添加、删除、获取元素时都是先计算hash，根据hash和table.length计算index也就是table数组的下标，
+然后进行相应操作，
+
+Class.forName和classloader的区别
+class.forName()和classLoader都可用来对类进行加载。
+class.forName()前者除了将类的.class文件加载到jvm中之外，还会对类进行解释，执行类中的static块。
+而classLoader只干一件事情，就是将.class文件加载到jvm中，不会执行static中的内容,
+只有在newInstance才会去执行static块。
+Class.forName(name, initialize, loader)带参函数也可控制是否加载static块。
+并且只有调用了newInstance()方法采用调用构造函数，创建类的对象
+
+session和cookie的区别和联系
+http://blog.csdn.net/duan1078774504/article/details/51912868
+cookie数据保存在客户端，session数据保存在服务器端。
+Cookies是属于Session对象的一种。但有不同，Cookies不会占服务器资源，
+是存在客服端内存或者一个cookie的文本文件中；而“Session”则会占用服务器资源。
+所以，尽量不要使用Session，而使用Cookies。
+但是我们一般认为cookie是不可靠的，session是可靠地，
+
+cookie最典型的应用是：
+
+判断用户是否登陆过网站，以便下次登录时能够直接登录。如果我们删除cookie，
+则每次登录必须从新填写登录的相关信息。
+另一个重要的应用是“购物车”中类的处理和设计。
+用户可能在一段时间内在同一家网站的不同页面选择不同的商品，
+可以将这些信息都写入cookie，在最后付款时从cookie中提取这些信息，
+当然这里面有了安全和性能问题需要我们考虑了。
+
+Session生命周期
+
+　　Session存储在服务器端，一般放置在服务器的内存中（为了高速存取），
+Sessinon在用户访问第一次访问服务器时创建，需要注意只有访问JSP、Servlet等程序时才会创建Session，
+只访问HTML、IMAGE等静态资源并不会创建Session，可调用request.getSession(true)强制生成Session。
+Session什么时候失效？
+1. 服务器会把长时间没有活动的Session从服务器内存中清除，此时Session便失效。
+Tomcat中Session的默认失效时间为20分钟。
+2. 调用Session的invalidate方法。
+
+多个服务部署时session管理
+1. Session复制，Web服务器之间同步session信息。
+2. 负载均衡支持会话亲和，相同的会话请求发送给同一个Web服务器。
+3. Session不存在Web服务器本地，而是放在缓存服务器如Redis上。
+4.iphash就不存在共享问题
+
+
+
+jdk7新特性
+1.1二进制变量的表示,支持将整数类型用二进制来表示，用0b开头。  
+1.2Switch语句支持string类型   
+1.3 Try-with-resource语句 
+1.4 Catch多个异常 说明：Catch异常类型为final； 生成Bytecode 会比多个catch小； Rethrow时保持异常类型   
+
+Java数组和链表两种结构的操作效率，
+在哪些情况下(从开头开始，从结尾开始，从中间开始)，哪些操作(插入，查找，删除)的效率高
+
+Java内存泄露的问题调查定位
+jstack
+观察jvm中当前所有线程的运行情况和线程当前状态。
+jstat
+jstat利用JVM内建的指令对Java应用程序的资源和性能进行实时的命令行的监控，
+包括了对进程的classloader，compiler，gc情况；
+jmap
+监视进程运行中的jvm物理内存的占用情况，该进程内存内，所有对象的情况，
+例如产生了哪些对象，对象数量；
+jinfo
+观察进程运行环境参数，包括Java System属性和JVM命令行参数
+
+
+java集合框架List,Map,Set,Queue
+http://blog.csdn.net/javaxiaojian/article/details/46679411
+ 如果涉及到堆栈，队列等操作，应该考虑用List，对于需要快速插入，删除元素，应该使用LinkedList，
+如果需要快速随机访问元素，应该使用ArrayList。
+
+    如果程序在单线程环境中，或者访问仅仅在一个线程中进行，考虑非同步的类，其效率较高，
+   如果多个线程可能同时操作一个类，应该使用同步的类。
+
+    在除需要排序时使用TreeSet,TreeMap外,都应使用HashSet,HashMap,因为他们 的效率更高。
+
+    要特别注意对哈希表的操作，作为key的对象要正确复写equals和hashCode方法。
+
+字节流跟字符流的区别
+一.字节流在操作时不会用到缓冲区（内存），是直接对文件本身进行操作的。而字符流在操作时使用了缓冲区，通过缓冲区再操作文件。
+二.在硬盘上的所有文件都是以字节形式存在的（图片，声音，视频），而字符值在内存中才会形成。
+
+
+
+接口和抽象类有什么区别
+http://www.cnblogs.com/yongjiapei/p/5494894.html
+
+接口是对动作的抽象，抽象类是对根源的抽象。
+一个类只能继承一个类（抽象类），但是可以实现多个接口(吃饭接口、走路接口)。
+1、抽象类和接口都不能直接实例化，如果要实例化，抽象类变量必须指向实现所有抽象方法的子类对象，
+接口变量必须指向实现所有接口方法的类对象。
+2、抽象类要被子类继承，接口要被类实现。
+3、接口只能做方法申明，抽象类中可以做方法申明，也可以做方法实现
+4、接口里定义的变量只能是公共的静态的常量，抽象类中的变量是普通变量。
+5、抽象类里的抽象方法必须全部被子类所实现，如果子类不能全部实现父类抽象方法，
+那么该子类只能是抽象类。同样，一个实现接口的时候，如不能全部实现接口方法，那么该类也只能为抽象类。
+6、抽象方法只能申明，不能实现，接口是设计的结果 ，抽象类是重构的结果
+7、抽象类里可以没有抽象方法
+8、如果一个类里有抽象方法，那么这个类只能是抽象类
+9、抽象方法要被实现，所以不能是静态的，也不能是私有的。
+10、接口可继承接口，并可多继承接口，但类只能单根继承。
+
+final关键字的使用和区别。
+http://www.cnblogs.com/dolphin0520/p/3736238.html
+1修饰类，该类不能被继承
+2修饰方法，该方法不能被子类重写。
+3修饰变量，变量是基本类型，初始化之后不能修改，如果是引用类型则不能指向另外一个对象
+
+异常分类和处理机制
+http://blog.csdn.net/weixin_35813749/article/details/53607376
+
+分类：
+
+运行时异常（Runtime Exception）
+受检查异常（Checked Exception）
+运行时异常：
+
+必须继承RuntimeException类，
+定义方法时不必声明会抛出运行时异常。
+调用方法时不必捕获运行时异常。
+受检查异常：
+
+不继承自RumtimeException类
+定义方法时需要抛出可能会抛出的Checked Exception
+调用方法时需要捕获Checked Exception或者继续向上抛出。
+逻辑上：
+
+处理机制：1捕获try,catch,finally2抛出throw throws
+运行时异常：一般不需要或者不知道如何处理此类异常；
+受检验异常：一般需要知道如何处理可能发生的异常情况。
+
+StringBuilder内部实现机制
+http://www.cnblogs.com/A_ming/archive/2010/04/13/1711395.html
+StringBuilder内部有一个字符数组，代码如下
+
+char[] value;   //字符数组
+int count;      //字符串长度
+每一次append操作都是将新的字符串加入到可变长的字符数组中，长度计算方式与ArrayList类似。
+调用toString()方法时，new一个String对象即可。
+
+public String toString() {
+        return new String(value, 0, count);// Create a copy, don't share the array
+}
+ps: StringBuffer是线程安全的，StringBuilder是非线程安全的。
+
+匿名内部类的使用
+匿名内部类是没有名字的类，只在某一处被使用，不会被多处调用，一般是某个父类或接口的特定实现。
+
+强引用、软引用、弱引用和虚引用
+强引用: 一般的引用都是强引用，即使OutOfMemory也不会回收这部分被把持的引用内存。
+软引用（SoftReference）: 如果内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。只要垃圾回收器没有回收它，该对象就可以被使用。++软引用可以用来实现内存敏感的高速缓存。++
+弱引用（WeakReference）：弱引用的对象拥有更短暂的生命周期。当垃圾回收期发现只有若引用的对象，不论内存空间足够与否，都会回收它。
+虚引用（）：虚引用不会决定对象的生命周期，如果一个对象仅持有一个虚引用，那么它随时可能被回收。++虚引用主要用来跟踪对象被垃圾回收器回收的活动。++
+更多关于『强、软、弱和虚引用』参考文章：http://zhangjunhd.blog.51cto....
+
+开源框架
+Struts1和Struts2的区别和对比:
+http://blog.csdn.net/john2522/article/details/7436307/
+
+SpringMVC和Struts2的区别
+SpringMVC的方法级别的拦截，Struts2是类级别的拦截；
+SpringMVC是基于Servlet实现Controller，Struts2是基于Filter实现；
+SpringMVC性能和安全性高于Struts2；
+SpringMVC更加组件化和流程化，易于扩展，比如返回JSON通过设置@ResponseBody即可；
+Struts2更加无耦合，比较纯粹，但是需要更多的自行开发的代码以支持更多功能。
+
+spring框架中需要引用哪些jar包，以及这些jar包的用途
+http://www.cnblogs.com/BensonHe/p/3903050.html
+
+Spring的MVC框架
+主要由DispatcherServlet、处理器映射、处理器(控制器)、视图解析器、视图组成
+SpringMVC运行原理
+客户端请求提交到DispatcherServlet
+由DispatcherServlet控制器查询一个或多个HandlerMapping，找到处理请求的Controller
+DispatcherServlet将请求提交到Controller
+Controller调用业务逻辑处理后，返回ModelAndView
+DispatcherServlet查询一个或多个ViewResoler视图解析器，找到ModelAndView指定的视图
+视图负责将结果显示到客户端
+
+DispatcherServlet是整个Spring MVC的核心。它负责接收HTTP请求组织协调Spring MVC的各个组成部分。
+其主要工作有以下三项：
+截获符合特定格式的URL请求。
+初始化DispatcherServlet上下文对应的WebApplicationContext，
+并将其与业务层、持久化层的WebApplicationContext建立关联。
+初始化Spring MVC的各个组成组件，并装配到DispatcherServlet中。
+
+springMVC注解的意思
+@Controller 负责注册一个bean 到spring 上下文中，bean 的ID 默认为类名称开头字母小写
+@Service 负责注册一个bean 到spring 上下文中，bean 的ID 默认为类名称开头字母小写
+@Autowired 根据bean 类型从spring 上线文中进行查找，注册类型必须唯一，否则报异常。
+与@Resource 的区别在于，@Resource 允许通过bean 名称或bean 类型两种方式进行查找
+@Resource(name="dataSource")
+@Autowired(required=false) 表示，如果spring 上下文中没有找到该类型的bean 时， 
+才会使用new SoftPMServiceImpl();
+@Autowired 标注作用于 Map 类型时，如果 Map 的 key 为 String 类型，
+则 Spring 会将容器中所有类型符合 Map 的 value 对应的类型的 Bean 增加进来，
+用 Bean 的 id 或 name 作为 Map 的 key。
+@Autowired 还有一个作用就是，如果将其标注在 BeanFactory 类型、ApplicationContext 类型、
+ResourceLoader 类型、ApplicationEventPublisher 类型、MessageSource 类型上，
+那么 Spring 会自动注入这些实现类的实例，不需要额外的操作。
+@RequestMapping 可以声明到类或方法上
+参数绑定说明
+@RequestParam(required=false)：参数不是必须的，默认为true
+@RequestParam(value="id",required=false)
+
+@PostConstruct
+在方法上加上注解@PostConstruct ，这个方法就会在Bean 初始化之后被Spring 容器执 行
+（注：Bean 初始化包括，实例化Bean ，并装配Bean 的属性（依赖注入））。
+@PreDestroy
+在方法上加上注解@PreDestroy ，这个方法就会在Bean 被销毁前被Spring 容器执行。
+@Repository
+与@Controller 、@Service 类似，都是向spring 上下文中注册bean ，不在赘述。
+@Component
+@Component 是所有受Spring 管理组件的通用形式，Spring 还提供了更加细化的注解形式：
+@Repository 、@Service 、@Controller ，它们分别对应存储层Bean ，业务层Bean ，和展示层Bean 。
+@Scope
+例如
+         @Scope("session")
+         @Repository()
+         public class UserSessionBean implementsSerializable {}
+ 
+说明
+ 
+在使用XML 定义Bean 时，可以通过bean 的scope 属性来定义一个Bean 的作用范围，
+同样可以通过@Scope 注解来完成
+
+       @Scope中可以指定如下值：
+       singleton:定义bean的范围为每个spring容器一个实例（默认值）
+       prototype:定义bean可以被多次实例化（使用一次就创建一次）
+       request:定义bean的范围是http请求（springMVC中有效）
+       session:定义bean的范围是http会话（springMVC中有效）
+       global-session:定义bean的范围是全局http会话（portlet中有效）
+@Required 注解只能标注在 Setter 方法之上。因为依赖注入的本质是检查 Setter 方法是否被调用了，
+而不是真的去检查属性是否赋值了以及赋了什么样的值。
+如果将该注解标注在非 setXxxx() 类型的方法则被忽略。
+
+Spring中ApplicationContext和beanfactory区别
+BeanFacotry是spring中比较原始的Factory。如XMLBeanFactory就是一种典型的BeanFactory。
+原始的BeanFactory无法支持spring的许多插件，如AOP功能、Web应用等。 
+  ApplicationContext接口,它由BeanFactory接口派生而来，因而提供BeanFactory所有的功能。
+ApplicationContext以一种更向面向框架的方式工作以及对上下文进行分层和实现继承，
+ApplicationContext包还提供了以下的功能： 
+1.利用MessageSource进行国际化  
+  BeanFactory是不支持国际化功能的，因为BeanFactory没有扩展Spring中MessageResource接口。
+相反，由于ApplicationContext扩展了MessageResource接口因而具有消息处理的能力(i18N)
+2.强大的事件机制(Event)  
+3.底层资源的访问  
+  ApplicationContext扩展了ResourceLoader(资源加载器)接口，从而可以用来加载多个Resource，
+而BeanFactory是没有扩展ResourceLoader
+4.对Web应用的支持  
+  与BeanFactory通常以编程的方式被创建不同的是，ApplicationContext能以声明的方式创建，
+如使用ContextLoader。当然你也可以使用ApplicationContext的实现之一来以
+编程的方式创建ApplicationContext实例 
+
+5.其它区别  
+  1).BeanFactroy采用的是延迟加载形式来注入Bean的，即只有在使用到某个Bean时(调用getBean())，
+才对该Bean进行加载实例化，这样，我们就不能发现一些存在的spring的配置问题。
+而ApplicationContext则相反，它是在容器启动时，一次性创建了所有的Bean。
+这样，在容器启动时，我们就可以发现Spring中存在的配置错误。 
+
+  2).BeanFactory和ApplicationContext都支持BeanPostProcessor、BeanFactoryPostProcessor的使用，
+但两者之间的区别是：BeanFactory需要手动注册，而ApplicationContext则是自动注册
+
+spring注入的方式
+http://blessht.iteye.com/blog/1162131
+1set注入，在xml中使用<property>
+2构造器注入，在xml中使用<constructor-arg>标签
+3静态工厂的方法注入
+就是通过调用静态工厂的方法来获取自己需要的对象
+<!--配置bean,配置后该类由spring管理-->  
+    <bean name="springAction" class="com.bless.springdemo.action.SpringAction" >  
+        <property name="staticFactoryDao" ref="staticFactoryDao"></property>  
+    </bean>  
+    <!--(3)此处获取对象的方式是从工厂类中获取静态方法-->  
+    <bean name="staticFactoryDao" class="com.bless.springdemo.factory.DaoFactory" factory-method="getStaticFactoryDaoImpl"></bean>  
+4实例工厂的方法注入
+<!--配置bean,配置后该类由spring管理-->  
+    <bean name="springAction" class="com.bless.springdemo.action.SpringAction">  
+        <!--(4)使用实例工厂的方法注入对象,对应下面的配置文件(4)-->  
+        <property name="factoryDao" ref="factoryDao"></property>  
+    </bean>  
+      
+    <!--(4)此处获取对象的方式是从工厂类中获取实例方法-->  
+    <bean name="daoFactory" class="com.bless.springdemo.factory.DaoFactory"></bean>  
+    <bean name="factoryDao" factory-bean="daoFactory" factory-method="getFactoryDaoImpl"></bean>  
+
+
+分布式事务
+CAP定理
+1一致性（consistency）：所有节点同一时间看到的是相同的数据
+weak 弱一致性，写入一个新值后，读操作在数据副本上可能读出来，也可能读不出来
+例如：存储系统，搜索引擎，实时游戏，语音聊天
+eventually 最终一致性：当你写入一个新值后，并不一定能马上读出来，但在某个时间之后一定能读出来。
+比如：DNS,电子邮件，消息中间件等系统，
+Strong 强一致性：新的数据一旦写入，在任意副本都能读到新值，
+比如：文件系统，RDBMS
+
+
+
+
+
+
+一.事务的4个特性： 
+原子性(Atomic)：一个事务中所有对数据库的操作是一个不可分割的操作序列，要么全做，要么全不做。 
+一致性(Consistency)：数据不会因为事务的执行而遭到破坏。 
+隔离性(Isolation)：一个事务的执行，不受其他事务（进程）的干扰。既并发执行的个事务之间互不干扰。 
+持久性(Durability)：一个事务一旦提交，它对数据库的改变将是永久的。
+
+事务的作用：
+保证执行结果的正确性
+保证数据的一致性
+ACID
+
+CAP分布式理论
+C（一致性）一致性是指数据的原子性，在经典的数据库中通过事务来保障，事务完成时，无论成功或回滚，
+数据都会处于一致的状态，在分布式环境下，一致性是指多个节点数据是否一致；
+A（可用性）服务一直保持可用的状态，当用户发出一个请求，服务能在一定的时间内返回结果；
+P（分区容忍性）在分布式应用中，可能因为一些分布式的原因导致系统无法运转，好的分区容忍性，
+使应用虽然是一个分布式系统，但是好像一个可以正常运转的整体
+
+BASE特性
+BA: Basic Availability 基本业务可用性；
+S: Soft state 柔性状态；
+E: Eventual consistency 最终一致性；
+
+Spring事务的管理
+二.事务的实现方式： 
+分类：声明式事务、编程式事务
+基于AOP技术实现的声明式事务管理，实质就是：在方法执行前后进行拦截，
+然后在目标方法开始之前创建并加入事务，执行完目标方法后根据执行情况提交或回滚事务。
+声明式事务管理又有两种方式：
+基于XML配置文件的方式；
+另一个是在业务方法上进行@Transactional注解，将事务规则应用到业务逻辑中
+
+编程式事务（注解方式）：在需要事务的方法上配置相关的同学注解（包括事务类型、回滚策略等）
+
+1.IOC控制反转：控制权由对象本身转向容器，由容器对bean对象进行控制。
+2.AOP面向切面编程：把具体的类创建对应的代理类，通过代理类来对具体类进行操作。
+spring是一个容器，通过spring这个容器来对对象进行管理，根据配置文件来实现spring对对象的管理
+
+AOP实现的基础是JDK动态代理和CGLIB
+JDK实现动态代理需要实现类通过接口定义业务方法，对于没有接口的类，如何实现动态代理呢，
+这就需要CGLib了。CGLib采用了非常底层的字节码技术，其原理是通过字节码技术为一个类创建子类，
+并在子类中采用方法拦截的技术拦截所有父类方法的调用，顺势织入横切逻辑。
+JDK动态代理与CGLib动态代理均是实现Spring AOP的基础。
+
+事务传播行为：
+
+PROPAGATION_REQUIRED 如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中。这是最常见的选择。
+PROPAGATION_SUPPORTS 支持当前事务，如果当前没有事务，就以非事务方式执行
+PROPAGATION_MANDATORY 使用当前的事务，如果当前没有事务，就抛出异常
+PROPAGATION_REQUIRES_NEW 新建事务，如果当前存在事务，把当前事务挂起
+PROPAGATION_NOT_SUPPORTED 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起
+PROPAGATION_NEVER 以非事务方式执行，如果当前存在事务，则抛出异常
+PROPAGATION_NESTED 如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则执行与 PROPAGATION_REQUIRED 类似的操作
+
+事务隔离级别
+ISOLATION_DEFAULT  这是一个PlatfromTransactionManager默认的隔离级别，使用数据库默认的事务隔离级别.
+另外四个与JDBC的隔离级别相对应
+ISOLATION_READ_UNCOMMITTED 
+这是事务最低的隔离级别，它充许另外一个事务可以看到这个事务未提交的数据。
+这种隔离级别会产生脏读，不可重复读和幻像读。
+ISOLATION_READ_COMMITTED 
+保证一个事务修改的数据提交后才能被另外一个事务读取。
+另外一个事务不能读取该事务未提交的数据
+ISOLATION_REPEATABLE_READ 
+这种事务隔离级别可以防止脏读，不可重复读。但是可能出现幻像读。
+它除了保证一个事务不能读取另一个事务未提交的数据外，还保证了避免下面的情况产生(不可重复读)
+ISOLATION_SERIALIZABLE
+这是花费最高代价但是最可靠的事务隔离级别。事务被处理为顺序执行。
+      除了防止脏读，不可重复读外，还避免了幻像读
+
+脏读: 指当一个事务正在访问数据，并且对数据进行了修改，而这种修改还没有提交到数据库中，这时，
+     另外一个事务也访问这个数据，然后使用了这个数据。因为这个数据是还没有提交的数据， 那么另外一
+     个事务读到的这个数据是脏数据，依据脏数据所做的操作可能是不正确的。
+    
+ 不可重复读: 指在一个事务内，多次读同一数据。在这个事务还没有结束时，另外一个事务也访问该同一数据。
+             那么，在第一个事务中的两次读数据之间，由于第二个事务的修改，那么第一个事务两次读到的数据
+             可能是不一样的。这样就发生了在一个事务内两次读到的数据是不一样的，因此称为是不可重复读。
+            
+ 幻觉读: 指当事务不是独立执行时发生的一种现象，例如第一个事务对一个表中的数据进行了修改，这种修改涉及
+         到表中的全部数据行。同时，第二个事务也修改这个表中的数据，这种修改是向表中插入一行新数据。那么，
+         以后就会发生操作第一个事务的用户发现表中还有没有修改的数据行，就好象发生了幻觉一样。
+
+分布式事务处理机制
+http://www.cnblogs.com/moonandstar08/p/5334820.html
+
+Master-Slave 主从复制
+读写由Master负责，最后再同步到Slave上
+特点：数据同步通常是异步的
+      有良好的吞吐量，低延迟，在大多数RDBMS中支持，
+      弱/最终一致性
+
+Master-Master 多主复制
+存在多个Master,一个挂了另外一个可以继续用，
+特点：异步，最终一致性，多个节点间需要序列化协议
+
+两阶段提交
+协调者，参与者
+第一阶段（准备阶段）
+协调者向所有参与者节点询问是否可以提交，并等待响应，
+参与者执行事务操作，如果执行成功返回同意，执行失败返回中止
+第二阶段（提交阶段）
+协调者收到失败或者超时消息，则给每个参与者发送回滚消息；否则发送提交消息
+，参与者根据执行执行最终提交或者回滚，最后再释放锁资源。
+优点：原理简单，实现方便
+缺点：同步阻塞问题，所有参与者都是事物阻塞的
+
+单点故障，协调者发生故障，参与者一直阻塞，
+数据不一致.第二阶段提交时部分受到指令，部分未收到。
+
+三阶段提交
+cancommit,precommit,docommit
+
+1、单数据库事务
+利用数据库的策略实现
+2、多数据库事务
+根据二阶段提交协议，采用spring 3.0 + Atomikos + JTA进行支持；
+3、基于事务型消息队列的最终一致性
+4、基于消息队列+定时补偿机制的最终一致性
+5、异步回调机制的引入
+
+
+乐观锁：假设不会发生并发冲突，只在提交操作时检查是否违反数据完整性
+悲观锁：假定会发生并发冲突，屏蔽一切可能违反数据完整性的操作
+
+spring中循环注入的方式
+1构造器注入2循环注入
+
+
+
+Hibernate与MyBatis的比较
+Hibernate完全实现对象关系映射（ORM），MyBatis实现的是SQL Mapping
+MyBatis可以进行更为细致的SQL优化，可以减少查询字段。比Hibernate容易掌握，Hibernate门槛较高。
+Hibernate的DAO层开发比MyBatis简单，Mybatis需要维护SQL和结果映射。
+Hibernate对对象的维护和缓存要比MyBatis好，对增删改查的对象的维护要方便。
+Hibernate数据库移植性很好，MyBatis的数据库移植性不好，不同的数据库需要写不同SQL。
+Hibernate有更好的二级缓存机制，可以使用第三方缓存。MyBatis本身提供的缓存机制不佳。
+
+缓存和NoSQL
+缓存命中率的计算
+命中缓存次数/(命中缓存次数+未命中缓存次数) = 命中率
+
+Memcache与Redis的区别
+memcache把数据存在内存之中，断电后会挂掉；Redis部分数据持久化在硬盘上，断电不会丢失。
+memcache存的是key-value对，redis支持更多的数据结构和数据类型
+memcache可以使用一致性hash做分布式，redis可以做主从同步
+redis单线程，只使用1个cpu
+如何实现Redis的分片
+使用一致性哈希对数据进行映射
+实现方式：客户端分片（每个客户端对应一个分片）、代理协助分片、查询路由分片；
+使用redis集群，如codis（豌豆荚，依赖zookeeper）；
+分布式
+zookeeper的用途
+zookeeper作为分布式应用协调系统，已经用到很多分布式项目中。可以用来完成统一命名服务、状态同步服务、集群管理、分布式应用配置项等管理工作。
+
+zookeeper的主要操作分一下几种：
+
+创建节点
+读取节点数据
+更新节点数据
+删除节点
+监控节点变化
+应用场景：
+
+统一命名服务，使用create自动创建节点编号；
+配置管理，多个节点的共享配置，当配置发生变化时，可利用zookeeper让使用这些配置的节点获得通知，进行重新加载等操作。如dubbo服务。
+集群管理：集群选举主节点，资源定位。
+共享锁
+负载均衡
+应用项目：dubbo服务集群、redis集群、Hadoop集群等
+
+dubbo的用途以及优点
+Dubbo是一个分布式服务框架，致力于提供高性能和透明化的RPC远程服务调用方案，以及SOA服务治理方案。
+
+数据结构和算法
+将单项链表逆序排列
+将单向链表逆序输出，方法有三种：
+
+遍历链表，将每个节点的内容存入一个数组中，然后逆序输出数组(最简单的做法)
+使用栈来逆序输出
+直接将链表（指针）逆序然后输出
+单向链表详细信息参考文章：http://blog.csdn.net/jianyuer...
+
+
+多线程
+Java创建线程之后，直接调用start()方法和run()的区别
+调用start方法实现多线程，而调用run方法没有实现多线程
+
+java四种线程池的使用
+http://cuisuqiang.iteye.com/blog/2019372
+newCachedThreadPool创建一个可缓存线程池，如果线程池长度超过处理需要，
+可灵活回收空闲线程，若无可回收，则新建线程。
+newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。
+newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行。
+newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，
+保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。
+
+
+
+数据库锁
+http://blog.csdn.net/samjustin1/article/details/52210125
+共享锁、排他锁、更新锁、意向锁、计划锁
+
+海量数据操作
+十道面试题与十个海量数据处理方法总结
+
+
+学习网站
+http://blog.csdn.net/evankaka/article/details/
+
+ActiveMQ入门
+http://www.cnblogs.com/xwdreamer/archive/2012/02/21/2360818.html
+ActiveMQ的安装即使用
+http://blog.csdn.net/u010739551/article/details/50662476
+
+ linux启动
+./activemq console 前端启动 Ctrl+c停止
+./activemq start 后端启动
+./activemq stop 停止
+
+http://blog.csdn.net/evankaka/article/details/55808628并发
+
+jdk的安装与卸载
+https://jingyan.baidu.com/article/ab0b56308966acc15afa7d18.html
+http://www.cnblogs.com/samcn/archive/2011/03/16/1986248.html
+
+rmi是在tcp的基础上又定义了自己的一层应用协议，主要用于远程方法调用，对数据量要求不高，如果传输的
+数据量较小时用rmi最合适，并且rmi是跟语言绑定的，java rmi的客户端跟服务端必须都用java
+连接个数：多连接
+连接方式：短连接
+传输协议：TCP
+传输方式：同步传输
+序列化：Java标准二进制序列化
+适用范围：传入传出参数数据包大小混合，消费者与提供者个数差不多，可传文件。
+适用场景：常规远程服务方法调用，与原生RMI服务互操作
+约束
+参数及返回值需实现Serializable接口
+dubbo配置中的超时时间对rmi无效，需使用java启动参数设置：-Dsun.rmi.transport.tcp.responseTimeout=3000，参见下面的RMI配置
+
+socket的网络编程位于TCP协议之上，socket的网络编程是使用独立于开发语言的，甚至独立于平台
+
+在网络上传输2 byte的有效数据，对于TCP而言，总共有478 byte被额外传输，
+而对于RMI, 1645byte被额外传输。
+
+Dubbo缺省协议采用单一长连接和NIO异步通讯，适合于小数据量大并发的服务调用，
+以及服务消费者机器数远大于服务提供者机器数的情况
+连接个数：单连接
+连接方式：长连接
+传输协议：TCP
+传输方式：NIO异步传输
+序列化：Hessian二进制序列化
+适用范围：传入传出参数数据包较小（建议小于100K），消费者比提供者个数多，单一消费者无法压满提供者，尽量不要用dubbo协议传输大文件或超大字符串。
+适用场景：常规远程服务方法调用
+约束
+参数及返回值需实现Serializable接口
+参数及返回值不能自定义实现List, Map, Number, Date, Calendar等接口，只能用JDK自带的实现，因为hessian会做特殊处理，自定义实现类中的属性值都会丢失。()
+Hessian序列化，只传成员属性值和值的类型，不传方法或静态变量，兼容情况：(由吴亚军提供)
+
+
+HESSIAN协议
+Hessian协议用于集成Hessian的服务，Hessian底层采用Http通讯，采用Servlet暴露服务，Dubbo缺省内嵌Jetty作为服务器实现
+连接个数：多连接
+连接方式：短连接
+传输协议：HTTP
+传输方式：同步传输
+序列化：Hessian二进制序列化
+适用范围：传入传出参数数据包较大，提供者比消费者个数多，提供者压力较大，可传文件。
+适用场景：页面传输，文件传输，或与原生hessian服务互操作
+约束
+参数及返回值需实现Serializable接口
+参数及返回值不能自定义实现List, Map, Number, Date, Calendar等接口，只能用JDK自带的实现，
+因为hessian会做特殊处理，自定义实现类中的属性值都会丢失
+
+HTTP协议
+连接个数：多连接
+连接方式：短连接
+传输协议：HTTP
+传输方式：同步传输
+序列化：表单序列化
+适用范围：传入传出参数数据包大小混合，提供者比消费者个数多，可用浏览器查看，可用表单或URL传入参数，暂不支持传文件。
+适用场景：需同时给应用程序和浏览器JS使用的服务。
+约束
+参数及返回值需符合Bean规范
+
+WEBSERVICE协议
+连接个数：多连接
+连接方式：短连接
+传输协议：HTTP
+传输方式：同步传输
+序列化：SOAP文本序列化
+适用场景：系统集成，跨语言调用。
+
+
+签名、加密
+http://blog.csdn.net/u012467492/article/details/52034835
+
+在C盘根目录新建一个txt文档，然后改名为：MANIFEST.MF
+进入classes目录
+然后命令行下输入命令：
+jar cvfm my.jar c:/MANIFEST.MF  *.*
+my.jar  jar名字
+MANIFEST.MF   就是刚新建的    
+*.*   把classes下的class都打包
+
+
+
+
+hashmap结构；什么对象能做为key
+hashtable,concurrentHashMap,hashtable比较
+String,StringBuilder,StringBuffer对象的深浅复制多线程
+：wait,sleep分别是谁的方法，
+区别countLatch的await方法是否安全，怎
+么改造线程池参数，整个流程描述背后的底层原理aqs，
+casThreadLocal原理，注意事项，
+参数传递还有Java的锁，
+内置锁，
+显示锁，
+各种容器及锁优化：
+锁消除，锁粗化，锁偏向，轻量级锁web方面：
+servlet是否线程安全，
+如何改造session与cookie的区别，
+get和post区别，
+tcp3次握手，
+文件上传用post还是getsession的存储
+如何防止表单重复提交
+jvm:jvm内存模型，
+jvm问题工具,jps,jinfo,jmap...
+数据库：最重要的索性及底层实现索性失效的场景最左原则
+查看执行计划及
+carndiation然后是锁的类型，
+行级表级悲观乐观锁解释数据库事物及特性隔离级别及实现，
+redo log .undo logbin log
+主从复制mvcc,Next-Key Lock分布式：问了CAP，
+跟basezookeeper满足了CAP的哪些特性，
+paxos缓存穿透
+怎么解决redis的io模型
+如果保证redis高可用
+redis是单线程还是多线程
+线上cpu占比过高怎么排查
+一致性hash分库分表
+spring:ioc,aop原理
+ioc初始化流程
+springmvc的流程
+springboot
+,spring 
+cloud相关组件
+
+
+
