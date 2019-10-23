@@ -18,7 +18,16 @@ git branch -d testing
 
 git remote 不带参数，列出已经存在的远程分支
 git remote -v 或者  --verbose  列出详细信息，在每一个名字后面列出其远程url
+git remote add pb git://github.com/paulboone/ticgit.git
+pb 指代对应的仓库地址了默认origin
 
+git fetch pb
 
+git push --set-upstream origin master  origin指远程分支名称
 
+git clone https://github.com/songyajierjj/javaSummary.git
+
+从远程服务器克隆一个一模一样的版本库到本地,复制的是整个版本库，叫做clone
+从远程服务器获取到一个branch分支的更新到本地，并更新本地库，叫做pull
+git pull相当于是从远程获取最新版本并merge（合并）到本地     git pull = git fetch + git merge，git fetch更安全一些
 
