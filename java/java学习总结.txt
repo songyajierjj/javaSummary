@@ -1,4 +1,4 @@
-并发编程：
+一、并发编程：
 
 什么是多线程并发和并行？ 
 并行是指两个或者多个事件在同一时刻发生；而并发是指两个或多个事件在同一时间间隔发生
@@ -208,7 +208,7 @@ Threa,Runnable,Callable+Future
 47.Java线程数过多会造成什么异常？
 
 
-JVM
+二、JVM
 
 Java 内存分配？
 程序计数器，虚拟机栈，本地方法栈，堆，方法区
@@ -335,7 +335,8 @@ Java 中垃圾收集的方法有哪些？
 什么是GC调优？
 常见异步的手段有哪些？
 
-Spring
+三、Spring
+
 为什么需要代理模式？
 在不修改类的基础上，对类的功能附件与增强
 
@@ -396,7 +397,8 @@ ApplicationContext接口,它由BeanFactory接口派生而来，ApplicationContext包含BeanFa
 spring中的BeanFactory就是简单工厂模式的体现，根据传入一个唯一的标识来获得bean对象
 
 
-数据库 https://cloud.tencent.com/developer/article/1469131
+四、数据库 
+https://cloud.tencent.com/developer/article/1469131
 
 MySQL 有哪些存储引擎啊？都有什么区别？
 MyIsam
@@ -494,7 +496,7 @@ MySQL常用优化方式有哪些？
 MySQL常用监控？
 MySQL瓶颈分析？
 
-redis
+五、redis
 
 redis数据结构有哪些？
 Redis缓存穿透，缓存雪崩？
@@ -558,6 +560,76 @@ Redis回收使用的是什么算法？
 Redis有哪些适合的场景？
 
 
+六、MQ
+1. 为什么使用 MQ, MQ 如何选型, 消息可靠性如何保证, 如何保证幂等
+mq 消息可靠性,幂等如何保证
+MQ作用
+1、异步
+2、解耦
+3、削峰
+缺点：系统可用性降低、复杂度增高
+选型
+特性	     ActiveMQ	RabbitMQ	RocketMQ	kafka
+开发语言	java	erlang	        java	        scala
+单机吞吐量	万级	万级	        10万级	        10万级
+时效性	        ms级	us级	        ms级	        ms级以内
+可用性	高(主从架构)	高(主从架构)	非常高(分布式架构)	非常高(分布式架构)
+功能特性	
+成熟的产品，在很多公司得到应用；有较多的文档；各种协议支持较好	
+基于erlang开发，所以并发能力很强，性能极其好，延时很低;管理界面较丰富	
+MQ功能比较完备，扩展性佳	
+只支持主要的MQ功能，像一些消息查询，消息回溯等功能没有提供，毕竟是为大数据准备的，在大数据领域应用广。
+RabbitMQ消息可靠性保证
+1生产者 transaction 或者 confirm 
+2消息队列丢失数据 queue持久化 消息持久化
+3消费者丢失数据 关闭自动 ack，手动ack
+
+七、RPC
+2. 用过 dubbo吗? 
+dubbo四大组件
+Provider：提供者
+Consumer：消费者
+registry：注册中心（相当于中介）
+monitor：监控中心
+container：服务容器
+设计一个 rpc 框架.
+
+HTTP
+3. 介绍一下 https
+客户端              服务端
+第一步：客户使用https的URL访问Web服务器，要求与Web服务器建立SSL连接。
+第二步：Web服务器收到客户端请求后，会将网站的证书信息（证书中包含公钥）传送一份给客户端。
+第三步：客户端的浏览器与Web服务器开始协商SSL连接的安全等级，也就是信息加密的等级。
+第四步：客户端的浏览器根据双方同意的安全等级，建立会话密钥，然后利用网站的公钥将会话密钥加密，并传送给网站。
+第五步：Web服务器利用自己的私钥解密出会话密钥。
+第六步：Web服务器利用会话密钥加密与客户端之间的通信。
+
+RPC协议与HTTP协议的区别
+
+1、RPC是一种API，HTTP是一种无状态的网络协议。RPC可以基于HTTP协议实现，也可以直接在TCP协议上实现。
+2、RPC主要是用在大型网站里面，因为大型网站里面系统繁多，业务线复杂，而且效率优势非常重要的一块，这个时候RPC的优势就比较明显了。
+HTTP主要是用在中小型企业里面，业务线没那么繁多的情况下。
+3、HTTP开发方便简单、直接。开发一个完善的RPC框架难度比较大。
+4、HTTP发明的初衷是为了传送超文本的资源，协议设计的比较复杂，参数传递的方式效率也不高。开源的RPC框架针对远程调用协议上的效率会比HTTP快很多。
+5、HTTP需要事先通知，修改Nginx/HAProxy配置。RPC能做到自动通知，不影响上游。
+6、HTTP大部分是通过Json来实现的，字节大小和序列化耗时都比Thrift要更消耗性能。RPC，可以基于Thrift实现高效的二进制传输。
+
+TCP UDP区别
+TCP 是面向连接的，UDP 是面向无连接的
+UDP程序结构较简单
+TCP 是面向字节流的，UDP 是基于数据报的
+TCP 保证数据正确性，UDP 可能丢包
+TCP 保证数据顺序，UDP 不保证
+
+OSI七层模型
+应用层   HTTP,FTP,TFTP,SMTP
+表示层
+会话层      
+传输层   TCP,UDP
+网络层   IP,ICMP,ARP,BARP,AKP,UUCP
+数据链路层 FDDI,PPP
+物理层   IEEE
+
 
 网络编程
 
@@ -573,7 +645,7 @@ TCP三次握手、四次挥手？
 DNS解析过程？
 TCP如何保证数据的可靠传输的？
 
-分布式
+八、分布式
 
 什么是CAP定理？
 说说CAP理论和BASE理论？
