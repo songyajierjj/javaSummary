@@ -396,6 +396,25 @@ ApplicationContext接口,它由BeanFactory接口派生而来，ApplicationContext包含BeanFa
 谈谈Spring Bean 创建过程中的设计模式？
 spring中的BeanFactory就是简单工厂模式的体现，根据传入一个唯一的标识来获得bean对象
 
+SrpingBean的生命周期
+实例化：构造器注入或者简单实例化
+设置bean的Aware：BeanNameAware，BeanClassLoaderAware，ResourceLoaderAware,ApplicationContextAware,BeanFactoryAware
+BeanPostProcessor.postProcessBeforeInitialization(Object bean, String beanName) 后置处理器在初始化之前的工作
+InitializingBean.afterPorpertiesSet     bean的属性设置
+BeanPostProcessor.postProcessAfterInitialization(Object bean, String beanName)  后置处理器在初始化之后的工作
+SmartInitializingSingleton.afterSingletonsInstantiated 单例bean在初始化之后的设置
+SmartLifecycle.start 生命周期开始
+bean已经在spring容器的管理下，可以做我们想做的事
+SmartLifecycle.stop(Runnable callback) 生命周期停止
+DisposableBean.destroy() bean销毁
+
+Spring AOP / AspectJ AOP 的区别？
+Spring AOP属于运行时增强，而AspectJ是编译时增强。
+Spring AOP基于代理（Proxying），
+而AspectJ基于字节码操作（Bytecode Manipulation）。AspectJ相比于Spring AOP功能更加强大，但是Spring AOP相对来说更简单。如果切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择AspectJ，它比SpringAOP快很多。
+
+
+
 
 四、数据库 
 https://cloud.tencent.com/developer/article/1469131
@@ -474,6 +493,12 @@ InnoDB只有通过索引条件检索数据才使用行级锁，否则，InnoDB将使用表锁
 
 还有什么其他的索引类型，各自索引有哪些优缺点？
 谈谈对Innodb事务的理解？
+多版本并发控制（MVCC)
+每一行都冗余了两个字段，一个是行的创建版本，一个是行的删除版本
+版本号存在information_schema.INNODB_TRX表中
+版本号（trx_id）随着每次事务开启自增
+每次取的时候取创建版本小于当前的版本，删除版本大于当前的版本
+
 说说数据库事务特点及潜在问题？
 什么是MySQL隔离级别？
 有多少种事务失效的场景，如何解决？

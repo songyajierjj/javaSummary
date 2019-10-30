@@ -1,4 +1,8 @@
 https://www.cnblogs.com/dreamroute/p/8484457.html
+
+关系数据库     ⇒ 数据库 ⇒ 表    ⇒ 行    ⇒ 列(Columns)
+
+Elasticsearch  ⇒ 索引(Index)   ⇒ 类型(type)  ⇒ 文档(Docments)  ⇒ 字段(Fields)  
 Elasticsearch有几个核心概念
 （1） 接近实时（NRT） 
 Elasticsearch是一个接近实时的搜索平台。这意味着，从索引一个文档直到这个文档能够被搜索到有一个轻微的延迟（通常是1秒）。

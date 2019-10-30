@@ -189,7 +189,7 @@ cat /proc/sys/net/ipv4/ip_local_port_range
 
 net.ipv4.tcp_fin_timeout= 120
 
-cat /proc/meminfo
+
 
 阿里云磁盘挂载
 https://yq.aliyun.com/articles/7804?spm=5176.10695662.1996646101.searchclickresult.4de945d5kLJ2hs
@@ -239,4 +239,18 @@ buffers Buffer Cache和cached Page Cache 磁盘缓存的大小
 sync 命令将所有未写的系统缓冲区写到磁盘中，包含已修改的 i-node、已延迟的块 I/O 和读写映射文件）
 # echo 3 > /proc/sys/vm/drop_caches
 # cat /proc/sys/vm/drop_caches
+
+其实 free 命令中的信息都来自于 /proc/meminfo 文件
+cat /proc/meminfo
+
+top
+free
+ps aux：
+其中  VSZ(或VSS)列 表示，程序占用了多少虚拟内存。
+
+RSS列 表示， 程序占用了多少物理内存。
+
+虚拟内存可以不用考虑，它并不占用实际物理内存。
+
+ps -aux|grep 进行ID
 

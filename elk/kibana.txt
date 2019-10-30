@@ -1,0 +1,5 @@
+https://www.cnblogs.com/yiwangzhibujian/p/7137546.html
+
+
+kibana日志显示不全
+在kibana的management=>advance setting里设置truncate:maxHeight为0
