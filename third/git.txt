@@ -8,6 +8,9 @@ git add 文件夹名/*
 
 git commit -m '提交注释'
 
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+
 git branch -a 查看当前所在分支
 git checkout -b dev 创建一个dev分支并切换到新分支
 git branch dev 创建一个分支
