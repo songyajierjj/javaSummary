@@ -28,6 +28,8 @@ pb 指代对应的仓库地址了默认origin
 
 获取远程代码到本地
 git fetch origin master
+获取并合并代码
+git pull origin master
 
 git fetch pb
 
