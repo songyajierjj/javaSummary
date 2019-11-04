@@ -1,0 +1,42 @@
+windows下Python安装pymysql
+http://www.cnblogs.com/snn0605/p/6658009.html
+
+安装PyInstaller,可以将python文件打包成exe文件
+http://jingyan.baidu.com/article/a378c960b47034b3282830bb.html
+
+Python34/Scripts 
+pip.exe install PyInstaller
+
+打包
+d:\program\Python34\Scripts\pyinstaller.exe -F -w lianmingka.py
+
+
+学习
+https://www.zhihu.com/question/29138020/answer/81972368
+
+模块下载地址
+https://www.lfd.uci.edu/~gohlke/pythonlibs/#pymssql
+
+import pip
+print(pip.pep425tags.get_supported())
+
+python库地址
+https://www.lfd.uci.edu/~gohlke/pythonlibs/
+
+Python：Invalid environment marker：python_version<2.7问题解决方案
+http://blog.csdn.net/yhyr_ycy/article/details/78876148
+
+pip升级
+python -m pip install --upgrade pip
+
+爬虫
+https://www.cnblogs.com/wuxl360/p/5567631.html
+
+网页版微信
+https://zhuanlan.zhihu.com/p/33970981
+
+python社区
+https://pythoncaff.com/auth/register
+
+python学习
+https://zhuanlan.zhihu.com/p/23561159

@@ -21,6 +21,9 @@ git remote -v 或者  --verbose  列出详细信息，在每一个名字后面�
 git remote add pb git://github.com/paulboone/ticgit.git
 pb 指代对应的仓库地址了默认origin
 
+获取远程代码到本地
+git fetch origin master
+
 git fetch pb
 
 git push --set-upstream origin master  origin指远程分支名称
