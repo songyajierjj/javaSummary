@@ -337,6 +337,20 @@ Java 中垃圾收集的方法有哪些？
 什么是GC调优？
 常见异步的手段有哪些？
 
+CPU过高
+（1）第一步  ， 用jps 查看java pid 
+（2）第二步，显示线程列表 ps -mp 42 -o THREAD,tid,time
+（3）第三步，选择自己要看的线程id , 即tid。将其转换成16进制格式。当时选择的是tid 为211.  print "%x\n" 211
+（4）第四步  打印堆栈信息
+jstack 进程号 | grep 线程号（16进制）
+（5）第五步 从堆栈信息中定位问题代码
+内存溢出
+2.1 收集内存溢出Dump文件
+jmap命令收集
+jmap -dump:live,format=b,file=/opt/jvm/dump.hprof pid。
+2.2 分析Dump文件
+使用工具MAT(MemoryAnalyzer)进行分析
+
 三、Spring
 
 为什么需要代理模式？
