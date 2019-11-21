@@ -174,7 +174,7 @@ SerialÊÕ¼¯Æ÷:´®ÐÐ£¬µ¥Ïß³Ì£¬ÐÂÉú´ú¸´ÖÆËã·¨£¬ÀÏÄê´ú±ê¼ÇÕûÀí µ¥cpu³¡¾°£¬µ¥Ïß³ÌÐ§ÂÊ¸
 ParNewÊÕ¼¯Æ÷:´®ÐÐ£¬¶àÏß³Ì£¬ÐÂÉú´ú¸´ÖÆËã·¨£¬ÀÏÄê´ú±ê¼ÇÕûÀí
 Parallel ScavengeÊÕ¼¯Æ÷:¹Ø×¢ÍÌÍÂÁ¿£¬¸ßÐ§ÂÊÀûÓÃCPU,ÐÂÉú´ú¸´ÖÆËã·¨£¬ÀÏÄê´ú±ê¼ÇÕûÀí  jdk1.8Ä¬ÈÏÐÂÉú´ú
 Serial OldÊÕ¼¯Æ÷:CMSÊÕ¼¯Æ÷µÄºó±¸·½°¸
-Parallel OldÊÕ¼¯Æ÷:Parallel ScavengeµÄÀÏÄê´ú°æ±¾£¬¹Ø×¢ÍÌÍÂÁ¿  jdk1.8Ä¬ÈÏÐÂÉú´ú
+Parallel OldÊÕ¼¯Æ÷:Parallel ScavengeµÄÀÏÄê´ú°æ±¾£¬¹Ø×¢ÍÌÍÂÁ¿  jdk1.8Ä¬ÈÏÀÏÄê´ú
 CMSÊÕ¼¯Æ÷£ºÖ÷ÒªÀÏÄê´úÊ¹ÓÃ£¬²¢·¢ÊÕ¼¯£¬µÍÍ£¶Ù£¬±ê¼Ç-Çå³ýËã·¨ÊµÏÖ£¬
 ³õÊ¼±ê¼Ç£ºÔÝÍ£ÓÃ»§Ïß³Ì
 ²¢·¢±ê¼Ç£º¸úÓÃ»§Ïß³ÌÍ¬Ê±¿ªÆô£¬
@@ -244,6 +244,13 @@ jstat -gcutil ½ø³ÌID
 £¨4£©µÚËÄ²½  ´òÓ¡¶ÑÕ»ÐÅÏ¢
 jstack ½ø³ÌºÅ | grep Ïß³ÌºÅ£¨16½øÖÆ£©
 £¨5£©µÚÎå²½ ´Ó¶ÑÕ»ÐÅÏ¢ÖÐ¶¨Î»ÎÊÌâ´úÂë
+²é¿´¸ÃVM²ÎÊý
+jinfo -flags pid
+²é¿´Í³¼Æ½á¹û
+jmap -heap pid
+²é¿´¶ÔÏóÊµÀý
+jmap -histo 15178 | less
+
 ÄÚ´æÒç³ö
 2.1 ÊÕ¼¯ÄÚ´æÒç³öDumpÎÄ¼þ
 jmapÃüÁîÊÕ¼¯
@@ -799,7 +806,9 @@ TCP½¨Á¢Á¬½ÓºÍ¶Ï¿ªÁ¬½ÓµÄ¹ý³Ì£¿
 
 
 HTTPÐ­ÒéµÄ½»»¥Á÷³Ì£¬HTTPºÍHTTPSµÄ²îÒì£¬SSLµÄ½»»¥Á÷³Ì£¿
+
 TCPµÄ»¬¶¯´°¿ÚÐ­ÒéÓÐÊ²Ã´ÓÃ£¿
+
 HTTPÐ­Òé¶¼ÓÐÄÄÐ©·½·¨£¿
 Socket½»»¥µÄ»ù±¾Á÷³Ì£¿
 ½²½²tcpÐ­Òé£¨½¨Á¬¹ý³Ì£¬ÂýÆô¶¯£¬»¬¶¯´°¿Ú£¬Æß²ãÄ£ÐÍ£©£¿
