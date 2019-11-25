@@ -1,1 +1,29 @@
 https://www.zhihu.com/question/53729800
+
+
+https://www.cnblogs.com/hjwublog/p/10332042.html
+
+bean加载
+如果要让一个普通类交给Spring容器管理，通常有以下方法：
+
+1、使用 @Configuration与@Bean 注解
+
+2、使用@Controller @Service @Repository @Component 注解标注该类，然后启用@ComponentScan自动扫描
+
+3、使用@Import 方法
+
+@SpringBootApplication annotaion 包含以下三个注解
+@SpringBootConfiguration 标注是一个配置类
+只是@Configuration注解的派生注解
+
+@EnableAutoConfiguration 开启自动装配
+又是一个组合注解：@AutoConfigurationPackage和@Import(AutoConfigurationImportSelector.class)
+
+关于@Import注解，可以像@Configuration导入类或者组件，导入类，分三种
+
+直接导入普通的类
+导入实现了ImportSelector接口的类
+导入实现了ImportBeanDefinitionRegistrar接口的类
+
+
+@ComponentScan
