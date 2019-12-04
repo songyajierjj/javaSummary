@@ -617,6 +617,8 @@ Redis缓存穿透，缓存雪崩？
 缓存穿透：恶意用户模拟请求许多缓存中不存在的数据，导致请求落库，造成数据库异常
 解决方案：1使用互斥锁排队 2、接口限流、熔断、降级  3、布隆过滤器
 
+接口限流、熔断、降级方案
+
 如何使用Redis来实现分布式锁？
 redis.setnx expire
 
@@ -758,6 +760,7 @@ RabbitMQ消息可靠性保证
 1生产者 transaction 或者 confirm 
 2消息队列丢失数据 queue持久化 消息持久化
 3消费者丢失数据 关闭自动 ack，手动ack
+Rabbitmq如何保证消息有序
 
 ExchangeTypes
 fanout direct topic
@@ -765,6 +768,9 @@ binding key 把exchange和queue关系确定
 routing key 到queue
 
 七、RPC
+
+dubbo跟cloud区别
+
 2. 用过 dubbo吗? 
 dubbo四大组件
 Provider：提供者
