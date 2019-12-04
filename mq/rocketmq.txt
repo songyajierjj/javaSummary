@@ -5,3 +5,9 @@ Rocketmq相比于Rabbitmq、kafka具有主要优势特性有：
 • 支持指定次数和时间间隔的失败消息重发（kafka不支持，rabbitmq需要手动确认）
 • 支持consumer端tag过滤，减少不必要的网络传输（rabbitmq和kafka不支持）
 • 支持重复消费（rabbitmq不支持，kafka支持）
+
+深入浅出
+https://my.oschina.net/javaFamily/blog/3136276
+
+源码分析
+https://blog.csdn.net/csdnnews/article/details/81124883
