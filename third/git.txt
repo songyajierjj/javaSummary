@@ -54,3 +54,8 @@ git pull相当于是从远程获取最新版本并merge（合并）到本地    
 ssh-agent bash
 ssh-add -k /c/Users/admin/.ssh/id_rsa_gitlab
 
+git config --global http.proxy 127.0.0.1:1080
+git config --local http.proxy 127.0.0.1:1080
+
+git config --local --unset http.proxy 
+
