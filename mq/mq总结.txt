@@ -1,0 +1,6 @@
+kafka与rocketmq对比
+https://www.jianshu.com/p/c474ca9f9430
+
+https://www.jianshu.com/p/ed4638c6441d
+
+https://blog.csdn.net/damacheng/article/details/42846549

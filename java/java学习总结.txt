@@ -1,5 +1,8 @@
 一、并发编程：
 
+如何禁止序列化
+使用transient修饰
+
 什么是多线程并发和并行？ 
 并行是指两个或者多个事件在同一时刻发生；而并发是指两个或多个事件在同一时间间隔发生
 
@@ -315,6 +318,15 @@ rollbackFor 异常
 rollbackForClassName
 noRollbackFor
 noRollbackForClassName
+@Transactional 注解只能应用到 public 可见度的方法上。
+失败的原理是：@Transactional是基于动态代理来实现的，非public的方法，他@Transactional的动态代理对象信息为空，所以不能回滚。
+2.在类内部没有添加@Transactional的方法，调用了@Transactional方法时，当你调用是，他也不会回滚
+失败的原理：@Transactional是基于动态代理对象来实现的，而在类内部的方法的调用是通过this关键字来实现的，没有经过动态代理对象，所以事务回滚失效。
+默认情况下，Spring会对unchecked异常进行事务回滚；如果是checked异常则不回滚。 
+辣么什么是checked异常，什么是unchecked异常
+只读事务： 
+@Transactional(propagation=Propagation.NOT_SUPPORTED,readOnly=true) 
+
 
 谈谈对控制反转的设计思想的理解？
 
@@ -604,9 +616,14 @@ MySQL常用监控？
 MySQL瓶颈分析？
 
 mysql的两个机制
+MySQL支持单向、双向、链式级联、异步复制，5.5版本之后加入的半同步复制，5.6版本之后的GTID复制，MySQL5.7的多源复制、并行复制、loss-less复制
 半同步复制，用来解决主库数据丢失问题 通过从库ack确认
 并行复制，解决同步延时问题 从库开启多个并行读取relay 
 log中不同库的日志，并行重放不同库的日志，库级别的并行
+异步复制是MySQL默认的复制方式，主库写入binlog日志后即可成功返回客户端，无须等待binlog日志传递给从库的过程，但是一旦主库宕机，就有可能出现丢失数据的情况
+半同步复制提升了主从之间数据的一致性，让复制更加安全可靠
+AFTER_COMMIT 5.6版本的默认值，主库将每个事务写入binlog，并传递给从库，刷新到中继日志中，同时主库提交事务。之后主库开始等待从库的反馈，只有收到从库的回复之后，master才将commit OK的结果反馈给客户端 
+AFTER_SYNC 5.7版本新增，也是默认的半同步复制方式。主库将每个事务写入binlog并传递给从库，刷新到中继日志中，主库开始等待从库的反馈，接收到从库的回复之后，再提交事务并且返回commit OK结果给客户端。
 
 五、redis
 
@@ -965,5 +982,14 @@ BoundSql              表示动态生成的SQL语句以及相应的参数信息
 是将mybatis和spring进行整合开发，事务控制在service中,service结束，sqlSession就关闭
 
 
-
+l
 https://github.com/AobingJava/JavaFamily
+
+十、基础
+
+基础类型跟包装类型区别
+1.包装类型可以为NULL,在POJO里面最好定义包装类型
+2.包装类型可用于泛型，而基本类型不可以
+3.基本类型比包装类型更高效
+基本类型在栈中直接存储的具体数值，而包装类型则存储的是堆中的引用
+自动拆箱装箱 .valueOf() invValue()

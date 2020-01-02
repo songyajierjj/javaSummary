@@ -1,4 +1,13 @@
-﻿git init
+﻿ssh-keygen -t rsa -C "注册 gitlab 账户的邮箱"
+
+ssh-keygen -t rsa -f ~/.ssh/id_rsa_gitlab -C "注册 gitlab 账户的邮箱"
+
+重置密码
+git config --system --unset credential.helper
+
+git init
+git config --global user.name "注册GitLab的用户名"
+git config --global user.email "注册GitLab的邮箱"
 
 git add . 添加所有的文件
 git add --all 添加所有文件
@@ -40,4 +49,8 @@ git clone https://github.com/songyajierjj/javaSummary.git
 从远程服务器克隆一个一模一样的版本库到本地,复制的是整个版本库，叫做clone
 从远程服务器获取到一个branch分支的更新到本地，并更新本地库，叫做pull
 git pull相当于是从远程获取最新版本并merge（合并）到本地     git pull = git fetch + git merge，git fetch更安全一些
+
+
+ssh-agent bash
+ssh-add -k /c/Users/admin/.ssh/id_rsa_gitlab
 
