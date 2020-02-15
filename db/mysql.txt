@@ -125,3 +125,6 @@ pt-query-digest查询日志分析工具
 
 mysql rpm安装
 https://www.jb51.net/article/108425.htm
+
+/bin/sh /home/mysql-5.7.23-linux-glibc2.12-x86_64/bin/mysqld_safe --defaults-file=/etc/my.cnf
+/home/mysql-5.7.23-linux-glibc2.12-x86_64/bin/mysqld --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data --plugin-dir=/usr/local/mysql/lib/plugin --user=mysql --log-error=/var/log/mysqld.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/tmp/mysql.sock --port=3306
