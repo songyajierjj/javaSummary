@@ -1090,6 +1090,27 @@ SqlSource              ¸ºÔð¸ù¾ÝÓÃ»§´«µÝµÄparameterObject£¬¶¯Ì¬µØÉú³ÉSQLÓï¾ä£¬½«Ð
 BoundSql              ±íÊ¾¶¯Ì¬Éú³ÉµÄSQLÓï¾äÒÔ¼°ÏàÓ¦µÄ²ÎÊýÐÅÏ¢
 
 ÊÇ½«mybatisºÍspring½øÐÐÕûºÏ¿ª·¢£¬ÊÂÎñ¿ØÖÆÔÚserviceÖÐ,service½áÊø£¬sqlSession¾Í¹Ø±Õ
+https://blog.csdn.net/huangli1466384630/article/details/82432128
+
+Ò»¼¶»º´æ
+MybatisµÄÒ»¼¶»º´æÊÇÖ¸Session»º´æ¡£Ò»¼¶»º´æµÄ×÷ÓÃÓòÄ¬ÈÏÊÇÒ»¸öSqlSession¡£MybatisÄ¬ÈÏ¿ªÆôÒ»¼¶»º´æ¡£
+Ò²¾ÍÊÇÔÚÍ¬Ò»¸öSqlSessionÖÐ£¬Ö´ÐÐÏàÍ¬µÄ²éÑ¯SQL£¬µÚÒ»´Î»áÈ¥Êý¾Ý¿â½øÐÐ²éÑ¯£¬²¢Ð´µ½»º´æÖÐ£»
+µÚ¶þ´ÎÒÔºóÊÇÖ±½ÓÈ¥»º´æÖÐÈ¡¡£
+µ±Ö´ÐÐSQL²éÑ¯ÖÐ¼ä·¢ÉúÁËÔöÉ¾¸ÄµÄ²Ù×÷£¬MyBatis»á°ÑSqlSessionµÄ»º´æÇå¿Õ¡£
+
+Ò»¼¶»º´æµÄ·¶Î§ÓÐSESSIONºÍSTATEMENTÁ½ÖÖ£¬Ä¬ÈÏÊÇSESSION£¬Èç¹û²»ÏëÊ¹ÓÃÒ»¼¶»º´æ£¬¿ÉÒÔ°ÑÒ»¼¶»º´æµÄ·¶Î§Ö¸¶¨ÎªSTATEMENT£¬ÕâÑùÃ¿´ÎÖ´ÐÐÍêÒ»¸öMapperÖÐµÄÓï¾äºó¶¼»á½«Ò»¼¶»º´æÇå³ý¡£
+Èç¹ûÐèÒª¸ü¸ÄÒ»¼¶»º´æµÄ·¶Î§£¬¿ÉÒÔÔÚMybatisµÄÅäÖÃÎÄ¼þÖÐ£¬ÔÚÏÂÍ¨¹ýlocalCacheScopeÖ¸¶¨
+ÐèÒª×¢ÒâµÄÊÇ
+µ±MybatisÕûºÏSpringºó£¬Ö±½ÓÍ¨¹ýSpring×¢ÈëMapperµÄÐÎÊ½£¬Èç¹û²»ÊÇÔÚÍ¬Ò»¸öÊÂÎñÖÐÃ¿¸öMapperµÄÃ¿´Î²éÑ¯²Ù×÷¶¼¶ÔÓ¦Ò»¸öÈ«ÐÂµÄSqlSessionÊµÀý£¬
+Õâ¸öÊ±ºò¾Í²»»áÓÐÒ»¼¶»º´æµÄÃüÖÐ£¬µ«ÊÇÔÚÍ¬Ò»¸öÊÂÎñÖÐÊ±¹²ÓÃµÄÊÇÍ¬Ò»¸öSqlSession¡£
+
+¶þ¼¶»º´æ
+MybatisµÄ¶þ¼¶»º´æÊÇÖ¸mapperÓ³ÉäÎÄ¼þ¡£¶þ¼¶»º´æµÄ×÷ÓÃÓòÊÇÍ¬Ò»¸önamespaceÏÂµÄmapperÓ³ÉäÎÄ¼þÄÚÈÝ£¬¶à¸öSqlSession¹²Ïí¡£MybatisÐèÒªÊÖ¶¯ÉèÖÃÆô¶¯¶þ¼¶»º´æ
+¶þ¼¶»º´æÊÇÄ¬ÈÏÆôÓÃµÄ(ÒªÉúÐ§ÐèÒª¶ÔÃ¿¸öMapper½øÐÐÅäÖÃ)£¬ÈçÏëÈ¡Ïû£¬Ôò¿ÉÒÔÍ¨¹ýMybatisÅäÖÃÎÄ¼þÖÐµÄÔªËØÏÂµÄ×ÓÔªËØÀ´Ö¸¶¨cacheEnabledÎªfalse¡£
+ÒªÊ¹ÓÃ¶þ¼¶»º´æ³ýÁËÉÏÃæÒ»¸öÅäÖÃÍâ£¬ÎÒÃÇ»¹ÐèÒªÔÚÎÒÃÇÃ¿¸öDAO¶ÔÓ¦µÄMapper.xmlÎÄ¼þÖÐ¶¨ÒåÐèÒªÊ¹ÓÃµÄcache
+»¹ÓÐÒ»¸öÌõ¼þ¾ÍÊÇÐèÒªµ±Ç°µÄ²éÑ¯Óï¾äÊÇÅäÖÃÁËÊ¹ÓÃcacheµÄ£¬¼´ÉÏÃæÔ´ÂëµÄuseCache()ÊÇ·µ»ØtrueµÄ£¬
+Ä¬ÈÏÇé¿öÏÂËùÓÐselectÓï¾äµÄuseCache¶¼ÊÇtrue£¬Èç¹ûÎÒÃÇÔÚÆôÓÃÁË¶þ¼¶»º´æºó£¬ÓÐÄ³¸ö²éÑ¯Óï¾äÊÇÎÒÃÇ²»Ïë»º´æµÄ£¬Ôò¿ÉÒÔÍ¨¹ýÖ¸¶¨ÆäuseCacheÎªfalseÀ´´ïµ½¶ÔÓ¦µÄÐ§¹û¡£
+Èç¹ûÎÒÃÇ²»Ïë¸ÃÓï¾ä»º´æ£¬¿ÉÊ¹ÓÃuseCache="false
 
 
 l
@@ -1183,3 +1204,10 @@ https://blog.csdn.net/kunyus/article/details/90670710
 ²¿Êð²»Áé»î£º¹¹½¨Ê±¼ä³¤£¬ÈÎºÎÐ¡ÐÞ¸Ä±ØÐëÖØÐÂ¹¹½¨Õû¸öÏîÄ¿£¬Õâ¸ö¹ý³ÌÍùÍùºÜ³¤
 ÎÈ¶¨ÐÔ²»¸ß£ºÒ»¸öÎ¢²»×ãµÀµÄÐ¡ÎÊÌâ£¬¿ÉÒÔµ¼ÖÂÕû¸öÓ¦ÓÃ¹Òµô
 À©Õ¹ÐÔ²»¹»£ºÎÞ·¨Âú×ã¸ß²¢·¢Çé¿öÏÂµÄÒµÎñÐèÇó
+
+Spring
+@AutowiredÊÇspring¿ò¼ÜÌá¹©µÄÊµÏÖÒÀÀµ×¢ÈëµÄ×¢½â£¬Ö÷ÒªÖ§³ÖÔÚset·½·¨£¬field£¬¹¹Ôìº¯ÊýÖÐÍê³Ébean×¢Èë£¬
+×¢Èë·½Ê½ÎªÍ¨¹ýÀàÐÍ²éÕÒbean£¬¼´byTypeµÄ£¬Èç¹û´æÔÚ¶à¸öÍ¬Ò»ÀàÐÍµÄbean£¬ÔòÊ¹ÓÃ@QualifierÀ´Ö¸¶¨×¢ÈëÄÄ¸öbeanNameµÄbean
+@AutowiredºÍspringÒ»Æð¹¤×÷£¬Í¨¹ý·´ÉäÎªÕâ¸ö³ÉÔ±±äÁ¿¸³Öµ£¬Ò²¾ÍÊÇ½«Æä¸³ÎªÆÚÍûµÄÀàÊµÀý
+@AutowireºÍ@Inject£¬Èç¹ûÍ¬Ò»ÀàÐÍ´æÔÚ¶à¸öbeanÊµÀý£¬ÔòÐèÒªÖ¸¶¨×¢ÈëµÄbeanName¡£@AutowiredºÍ@QualifierÒ»ÆðÊ¹ÓÃ£¬@InjectºÍ@NameÒ»ÆðÊ¹ÓÃ¡£
+@ResourceÊÇJDKµÄ£¬ÊÇ»ùÓÚbeanµÄÃû×Ö£¬¼´beanName£¬À´´ÓspringµÄIOCÈÝÆ÷²éÕÒbean×¢ÈëµÄ
