@@ -391,7 +391,8 @@ DisposableBean.destroy() bean销毁
 Spring AOP / AspectJ AOP 的区别？
 Spring AOP属于运行时增强，而AspectJ是编译时增强。
 Spring AOP基于代理（Proxying），
-而AspectJ基于字节码操作（Bytecode Manipulation）。AspectJ相比于Spring AOP功能更加强大，但是Spring AOP相对来说更简单。如果切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择AspectJ，它比SpringAOP快很多。
+而AspectJ基于字节码操作（Bytecode Manipulation）。AspectJ相比于Spring AOP功能更加强大，但是Spring AOP相对来说更简单。如果切面比较少，
+那么两者性能差异不大。但是，当切面太多的话，最好选择AspectJ，它比SpringAOP快很多。
 
 
 
@@ -661,6 +662,7 @@ string,list,set,zset,hash
 Redis缓存穿透，缓存雪崩？
 缓存穿透：恶意用户模拟请求许多缓存中不存在的数据，导致请求落库，造成数据库异常
 解决方案：1使用互斥锁排队 2、接口限流、熔断、降级  3、布隆过滤器
+缓存雪崩，是指在某一个时间段，缓存集中过期失效
 
 接口限流、熔断、降级方案
 
