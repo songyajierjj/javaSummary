@@ -186,3 +186,46 @@ AOF»º³åÇø£ºÕâ²¿·Ö¿Õ¼äÓÃÓÚÔÚRedisÖØÐ´ÆÚ¼ä±£´æ×î½üµÄÐ´ÈëÃüÁî£¬AOF»º³åÇø¿Õ¼äÏûºÄÓÃ»
 2.¾¡¿ÉÄÜÈÃhash±íÒÔziplist±àÂë´æ´¢
 3.¿ØÖÆ¼üµÄÊýÁ¿
 4.Ëõ¶Ìkey-valueµÄ³¤¶È
+
+
+1¡¢ÐÔÄÜ
+¶¼±È½Ï¸ß£¬ÐÔÄÜ¶ÔÎÒÃÇÀ´ËµÓ¦¸Ã¶¼²»ÊÇÆ¿¾±
+×ÜÌåÀ´½²£¬TPS·½ÃæredisºÍmemcache²î²»¶à£¬Òª´óÓÚmongodb
+
+2¡¢²Ù×÷µÄ±ãÀûÐÔ
+memcacheÊý¾Ý½á¹¹µ¥Ò»
+redis·á¸»Ò»Ð©£¬Êý¾Ý²Ù×÷·½Ãæ£¬redis¸üºÃÒ»Ð©£¬½ÏÉÙµÄÍøÂçIO´ÎÊý
+mongodbÖ§³Ö·á¸»µÄÊý¾Ý±í´ï£¬Ë÷Òý£¬×îÀàËÆ¹ØÏµÐÍÊý¾Ý¿â£¬Ö§³ÖµÄ²éÑ¯ÓïÑÔ·Ç³£·á¸»
+
+3¡¢ÄÚ´æ¿Õ¼äµÄ´óÐ¡ºÍÊý¾ÝÁ¿µÄ´óÐ¡
+redisÔÚ2.0°æ±¾ºóÔö¼ÓÁË×Ô¼ºµÄVMÌØÐÔ£¬Í»ÆÆÎïÀíÄÚ´æµÄÏÞÖÆ£»¿ÉÒÔ¶Ôkey valueÉèÖÃ¹ýÆÚÊ±¼ä£¨ÀàËÆmemcache£©
+memcache¿ÉÒÔÐÞ¸Ä×î´ó¿ÉÓÃÄÚ´æ,²ÉÓÃLRUËã·¨
+mongoDBÊÊºÏ´óÊý¾ÝÁ¿µÄ´æ´¢£¬ÒÀÀµ²Ù×÷ÏµÍ³VM×öÄÚ´æ¹ÜÀí£¬³ÔÄÚ´æÒ²±È½ÏÀ÷º¦£¬·þÎñ²»ÒªºÍ±ðµÄ·þÎñÔÚÒ»Æð
+
+4¡¢¿ÉÓÃÐÔ£¨µ¥µãÎÊÌâ£©
+¶ÔÓÚµ¥µãÎÊÌâ£¬
+redis£¬ÒÀÀµ¿Í»§¶ËÀ´ÊµÏÖ·Ö²¼Ê½¶ÁÐ´£»Ö÷´Ó¸´ÖÆÊ±£¬Ã¿´Î´Ó½ÚµãÖØÐÂÁ¬½ÓÖ÷½Úµã¶¼ÒªÒÀÀµÕû¸ö¿ìÕÕ,ÎÞÔöÁ¿¸´ÖÆ£¬ÒòÐÔÄÜºÍÐ§ÂÊÎÊÌâ£¬
+ËùÒÔµ¥µãÎÊÌâ±È½Ï¸´ÔÓ£»²»Ö§³Ö×Ô¶¯sharding,ÐèÒªÒÀÀµ³ÌÐòÉè¶¨Ò»ÖÂhash »úÖÆ¡£
+Ò»ÖÖÌæ´ú·½°¸ÊÇ£¬²»ÓÃredis±¾ÉíµÄ¸´ÖÆ»úÖÆ£¬²ÉÓÃ×Ô¼º×öÖ÷¶¯¸´ÖÆ£¨¶à·Ý´æ´¢£©£¬»òÕß¸Ä³ÉÔöÁ¿¸´ÖÆµÄ·½Ê½£¨ÐèÒª×Ô¼ºÊµÏÖ£©£¬Ò»ÖÂÐÔÎÊÌâºÍÐÔÄÜµÄÈ¨ºâ
+Memcache±¾ÉíÃ»ÓÐÊý¾ÝÈßÓà»úÖÆ£¬Ò²Ã»±ØÒª£»¶ÔÓÚ¹ÊÕÏÔ¤·À£¬²ÉÓÃÒÀÀµ³ÉÊìµÄhash»òÕß»·×´µÄËã·¨£¬½â¾öµ¥µã¹ÊÕÏÒýÆðµÄ¶¶¶¯ÎÊÌâ¡£
+mongoDBÖ§³Ömaster-slave,replicaset£¨ÄÚ²¿²ÉÓÃpaxosÑ¡¾ÙËã·¨£¬×Ô¶¯¹ÊÕÏ»Ö¸´£©,auto sharding»úÖÆ£¬¶Ô¿Í»§¶ËÆÁ±ÎÁË¹ÊÕÏ×ªÒÆºÍÇÐ·Ö»úÖÆ¡£
+
+
+5¡¢¿É¿¿ÐÔ£¨³Ö¾Ã»¯£©
+¶ÔÓÚÊý¾Ý³Ö¾Ã»¯ºÍÊý¾Ý»Ö¸´£¬
+redisÖ§³Ö£¨¿ìÕÕ¡¢AOF£©£ºÒÀÀµ¿ìÕÕ½øÐÐ³Ö¾Ã»¯£¬aofÔöÇ¿ÁË¿É¿¿ÐÔµÄÍ¬Ê±£¬¶ÔÐÔÄÜÓÐËùÓ°Ïì
+memcache²»Ö§³Ö£¬Í¨³£ÓÃÔÚ×ö»º´æ,ÌáÉýÐÔÄÜ£»
+MongoDB´Ó1.8°æ±¾¿ªÊ¼²ÉÓÃbinlog·½Ê½Ö§³Ö³Ö¾Ã»¯µÄ¿É¿¿ÐÔ
+
+6¡¢Êý¾ÝÒ»ÖÂÐÔ£¨ÊÂÎñÖ§³Ö£©
+Memcache ÔÚ²¢·¢³¡¾°ÏÂ£¬ÓÃcas±£Ö¤Ò»ÖÂÐÔ
+redisÊÂÎñÖ§³Ö±È½ÏÈõ£¬Ö»ÄÜ±£Ö¤ÊÂÎñÖÐµÄÃ¿¸ö²Ù×÷Á¬ÐøÖ´ÐÐ
+mongoDB²»Ö§³ÖÊÂÎñ
+
+7¡¢Êý¾Ý·ÖÎö
+mongoDBÄÚÖÃÁËÊý¾Ý·ÖÎöµÄ¹¦ÄÜ(mapreduce),ÆäËû²»Ö§³Ö
+
+8¡¢Ó¦ÓÃ³¡¾°
+redis£ºÊý¾ÝÁ¿½ÏÐ¡µÄ¸üÐÔÄÜ²Ù×÷ºÍÔËËãÉÏ
+memcache£ºÓÃÓÚÔÚ¶¯Ì¬ÏµÍ³ÖÐ¼õÉÙÊý¾Ý¿â¸ºÔØ£¬ÌáÉýÐÔÄÜ;×ö»º´æ£¬Ìá¸ßÐÔÄÜ£¨ÊÊºÏ¶Á¶àÐ´ÉÙ£¬¶ÔÓÚÊý¾ÝÁ¿±È½Ï´ó£¬¿ÉÒÔ²ÉÓÃsharding£©
+MongoDB:Ö÷Òª½â¾öº£Á¿Êý¾ÝµÄ·ÃÎÊÐ§ÂÊÎÊÌâ   
