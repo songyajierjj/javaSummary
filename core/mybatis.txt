@@ -1,0 +1,40 @@
+MyBatis 是支持定制化 SQL、存储过程以及高级映射的优秀的持久层框架，其主要就完成2件事情：
+
+封装JDBC操作
+利用反射打通Java类与SQL语句之间的相互转换
+
+MyBatis的主要成员
+
+Configuration        MyBatis所有的配置信息都保存在Configuration对象之中，配置文件中的大部分配置都会存储到该类中
+SqlSession            作为MyBatis工作的主要顶层API，表示和数据库交互时的会话，完成必要数据库增删改查功能
+Executor               MyBatis执行器，是MyBatis 调度的核心，负责SQL语句的生成和查询缓存的维护
+StatementHandler 封装了JDBC Statement操作，负责对JDBC statement 的操作，如设置参数等
+ParameterHandler  负责对用户传递的参数转换成JDBC Statement 所对应的数据类型
+ResultSetHandler   负责将JDBC返回的ResultSet结果集对象转换成List类型的集合
+TypeHandler          负责java数据类型和jdbc数据类型(也可以说是数据表列类型)之间的映射和转换
+MappedStatement  MappedStatement维护一条<select|update|delete|insert>节点的封装
+SqlSource              负责根据用户传递的parameterObject，动态地生成SQL语句，将信息封装到BoundSql对象中，并返回
+BoundSql              表示动态生成的SQL语句以及相应的参数信息
+
+是将mybatis和spring进行整合开发，事务控制在service中,service结束，sqlSession就关闭
+https://blog.csdn.net/huangli1466384630/article/details/82432128
+
+一级缓存
+Mybatis的一级缓存是指Session缓存。一级缓存的作用域默认是一个SqlSession。Mybatis默认开启一级缓存。
+也就是在同一个SqlSession中，执行相同的查询SQL，第一次会去数据库进行查询，并写到缓存中；
+第二次以后是直接去缓存中取。
+当执行SQL查询中间发生了增删改的操作，MyBatis会把SqlSession的缓存清空。
+
+一级缓存的范围有SESSION和STATEMENT两种，默认是SESSION，如果不想使用一级缓存，可以把一级缓存的范围指定为STATEMENT，这样每次执行完一个Mapper中的语句后都会将一级缓存清除。
+如果需要更改一级缓存的范围，可以在Mybatis的配置文件中，在下通过localCacheScope指定
+需要注意的是
+当Mybatis整合Spring后，直接通过Spring注入Mapper的形式，如果不是在同一个事务中每个Mapper的每次查询操作都对应一个全新的SqlSession实例，
+这个时候就不会有一级缓存的命中，但是在同一个事务中时共用的是同一个SqlSession。
+
+二级缓存
+Mybatis的二级缓存是指mapper映射文件。二级缓存的作用域是同一个namespace下的mapper映射文件内容，多个SqlSession共享。Mybatis需要手动设置启动二级缓存
+二级缓存是默认启用的(要生效需要对每个Mapper进行配置)，如想取消，则可以通过Mybatis配置文件中的元素下的子元素来指定cacheEnabled为false。
+要使用二级缓存除了上面一个配置外，我们还需要在我们每个DAO对应的Mapper.xml文件中定义需要使用的cache
+还有一个条件就是需要当前的查询语句是配置了使用cache的，即上面源码的useCache()是返回true的，
+默认情况下所有select语句的useCache都是true，如果我们在启用了二级缓存后，有某个查询语句是我们不想缓存的，则可以通过指定其useCache为false来达到对应的效果。
+如果我们不想该语句缓存，可使用useCache="false
