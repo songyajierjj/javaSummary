@@ -1,0 +1,127 @@
+一、并发编程：
+
+如何禁止序列化
+使用transient修饰
+
+什么是多线程并发和并行？ 
+并行是指两个或者多个事件在同一时刻发生；而并发是指两个或多个事件在同一时间间隔发生
+
+什么是线程安全问题？ 
+多个线程在操作同一个共享变量的时候，预期结果和实际结果不一致。
+
+什么是共享变量的内存可见性问题？ 
+每个线程都有自己的私有内存空间（栈），线程启动后会把共享变量的值从共享内存拷贝一份到私有内存，并且再修改之后再push到共享内存，
+
+什么是Java中原子性操作？
+不会被线程调度机制打断的操作，一旦开始就不会被打断，一直到结束。
+
+什么是Java中的CAS操作,AtomicLong实现原理？
+比较并交换，内存值V,预期原值A,新值B,只有A=V的时候，才将V设置为B
+
+什么是Java指令重排序？
+在执行程序时为了提高性能，编译器和处理器常常会对指令做重排序 分三种 编译优化的重排序，指令级并行的重排序，内存系统的重排序
+
+Java中Synchronized关键字的内存语义是什么？
+synchronized 具有使每个线程依次排队操作共享变量的功能 原子性（只能被一个线程访问），可见性，有序性（只能被一个线程访问）
+
+Java中Volatile关键字的内存语义是什么？
+写的时候会把值刷新到主内存，读的时候把本地缓存清空，从主内存读取共享变量的值 可见性 有序性
+
+什么是伪共享,为何会出现，以及如何避免？
+当多线程修改互相独立的变量时，如果这些变量共享同一个缓存行，就会无意中影响彼此的性能，这就是伪共享
+
+什么是可重入锁、乐观锁、悲观锁、公平锁、非公平锁、独占锁、共享锁？
+可重入锁 可以多次获取同一把锁
+乐观锁 不锁住对象
+悲观锁 锁住对象
+公平锁 需要排队
+非公平锁 不需要排队
+独占锁 每次只能由一个线程占用
+共享锁 可以被多个线程共有
+
+讲讲ThreadLocal 的实现原理？ThreadLocal 作为变量的线程隔离方式，其内部是如何做的？
+Thread对象有一个ThreadLocalMap对象，key就是ThreadLocal,value可以任意值，以空间换时间，每个线程独自拥有一个变量，是隔离的
+
+说说InheritableThreadLocal 的实现原理？
+InheritableThreadLocal 是如何弥补 ThreadLocal 不支持继承的特性？
+
+CyclicBarrier内部的实现与 CountDownLatch 有何不同？
+CyclicBarrier主要基于ReentrantLock 以及 Condition 的共享唤醒线程，parties，count，每次调用await()方法时count-1，如果不等于0，
+调用condition.await()方法阻塞等待，如果等于0，则调用condition.signalAll()方法唤醒所有线程执行，同时count = parties,可重用
+CountDownLatch主要基于AQS实现，初始化state，每次调用coundDown()，state减1，直到减为0时，调用await()唤醒所有线程。
+
+随机数生成器 Random 类如何使用 CAS 算法保证多线程下新种子的唯一性？
+通过AtomicLong的compareAndSet来实现旧的种子跟新的种子的切换，来保证新种子的唯一性
+
+ThreadLocalRandom 是如何利用 ThreadLocal 的原理来解决 Random 的局限性？
+RANDOM是CAS操作，多个线程公用一个种子，会降低并发性能，ThreadLocalRandom实现了每个线程有自己单独的种子，提高性能
+
+Spring 框架中如何使用 ThreadLocal 实现 request scope 作用域 Bean？
+
+并发包中锁的实现底层（对AQS的理解）？
+
+讲讲独占锁 ReentrantLock 原理？
+CAS+CLH队列来实现,state从0开始
+
+
+谈谈读写锁 ReentrantReadWriteLock 原理？
+state是int类型，共32位，
+读锁用高16位，表示持有读锁的线程数（sharedCount）
+写锁用低16位，表示写锁的重入次数 （exclusiveCount）
+状态值为 0 表示锁空闲，读锁可连续获取多个，写锁只能在没有任何读写时才能获取，写锁的线程可获取当前线程的读锁，读锁获取时如果有写锁在队列等待，该读锁也必须入队。
+
+StampedLock 锁原理的理解？
+
+谈下对基于链表的非阻塞无界队列 ConcurrentLinkedQueue 原理的理解？
+tail,head
+入队时有两种操作：
+1、如果tail.next为空，将入队节点设置成尾节点的下一个节点
+2、如果tail的next不为空，将入队节点设置成tail节点
+ConcurrentLinkedQueue 内部是如何使用 CAS 非阻塞算法来保证多线程下入队出队操作的线程安全？
+
+基于链表的阻塞队列 LinkedBlockingQueue 原理。
+基于ReentrantLock 实现，定义了两个ReentrantLock对象一个takeLock，一个putLock，两个condition配合takeLock,putLock
+阻塞队列LinkedBlockingQueue 内部是如何使用两个独占锁 ReentrantLock 以及对应的条件变量保证多线程先入队出队操作的线程安全？
+
+分析下JUC 中倒数计数器 CountDownLatch 的使用与原理？
+基于AQS实现共享锁实现，初始化state，调用countdown时候，cas方法state减1，调用await()阻塞等待
+一个或者多个线程等待一组线程执行完毕，必须等所有运动员跑到终点才可以发布成绩（可以设置超时时间）
+CountDownLatch 与线程的 Join 方法区别是什么？
+thread.join() 方法必须等thread 执行完毕，才能向下执行
+CountDownLatch 则只要计数器为0，就可以继续执行
+
+讲讲对JUC 中回环屏障 CyclicBarrier 的使用？
+让一组线程等待某个事件发生，才能继续执行，所有运动员等待枪响才可以开始跑步，
+
+CyclicBarrier内部的实现与 CountDownLatch 有何不同？
+CountDownLath让等待的线程不阻塞，CyclicBarrier让线程阻塞，可重用
+
+Semaphore 的内部实现是怎样的？
+限定线程并发数量，基于AQS实现，有公平模式和非公平模式
+
+并发组件CopyOnWriteArrayList 是如何通过写时拷贝实现并发安全的 List？
+写的时候把数据元素copy一份，通过ReetrantLock加锁，如果读取的时候读的是老数据，写入之后把list数组地址指向新的地址
+
+同步与异步？阻塞与非阻塞？
+
+1. 同步，就是我调用一个功能，该功能没有结束前，我死等结果。
+2. 异步，就是我调用一个功能，不需要知道该功能结果，该功能有结果后通知我（回调通知）
+3. 阻塞，就是调用我（函数），我（函数）没有接收完数据或者没有得到结果之前，我不会返回。
+4. 非阻塞，就是调用我（函数），我（函数）立即返回，通过select通知调用者
+
+synchronized 
+对象被创建在堆中。并且对象在内存中的存储布局方式可以分为3块区域：对象头、实例数据、对齐填充。
+同步代码块
+synchronized的对象锁，其指针指向的是一个monitor对象（由C++实现）的起始地址。每个对象实例都会有一个 monitor。
+其中monitor可以与对象一起创建、销毁；亦或者当线程试图获取对象锁时自动生成。
+字节码中并没有monitorenter指令和monitorexit指令，取得代之的是ACC_SYNCHRONIZED标识，JVM通过ACC_SYNCHRONIZED标识，就可以知道这是一个需要同步的方法
+
+重量级锁，自旋锁，轻量级锁，偏向锁
+https://www.cnblogs.com/linghu-java/p/8944784.html
+偏向锁获取过程：
+访问Mark Word中偏向锁的标识是否设置成1，锁标志位是否为01，确认为可偏向状态。
+如果为可偏向状态，则测试线程ID是否指向当前线程，如果是，进入步骤5，否则进入步骤3。
+如果线程ID并未指向当前线程，则通过CAS操作竞争锁。如果竞争成功，则将Mark Word中线程ID设置为当前线程ID，然后执行5；如果竞争失败，执行4。
+如果CAS获取偏向锁失败，则表示有竞争。当到达全局安全点（safepoint）时获得偏向锁的线程被挂起，偏向锁升级为轻量级锁，
+然后被阻塞在安全点的线程继续往下执行同步代码。（撤销偏向锁的时候会导致stop the word）
+执行同步代码

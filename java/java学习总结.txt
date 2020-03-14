@@ -394,7 +394,11 @@ Spring AOP基于代理（Proxying），
 而AspectJ基于字节码操作（Bytecode Manipulation）。AspectJ相比于Spring AOP功能更加强大，但是Spring AOP相对来说更简单。如果切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择AspectJ，它比SpringAOP快很多。
 
 
-
+@Autowired是spring框架提供的实现依赖注入的注解，主要支持在set方法，field，构造函数中完成bean注入，
+注入方式为通过类型查找bean，即byType的，如果存在多个同一类型的bean，则使用@Qualifier来指定注入哪个beanName的bean
+@Autowired和spring一起工作，通过反射为这个成员变量赋值，也就是将其赋为期望的类实例
+@Autowire和@Inject，如果同一类型存在多个bean实例，则需要指定注入的beanName。@Autowired和@Qualifier一起使用，@Inject和@Name一起使用。
+@Resource是JDK的，是基于bean的名字，即beanName，来从spring的IOC容器查找bean注入的
 
 四、数据库 
 https://cloud.tencent.com/developer/article/1469131
@@ -1206,8 +1210,4 @@ https://blog.csdn.net/kunyus/article/details/90670710
 扩展性不够：无法满足高并发情况下的业务需求
 
 Spring
-@Autowired是spring框架提供的实现依赖注入的注解，主要支持在set方法，field，构造函数中完成bean注入，
-注入方式为通过类型查找bean，即byType的，如果存在多个同一类型的bean，则使用@Qualifier来指定注入哪个beanName的bean
-@Autowired和spring一起工作，通过反射为这个成员变量赋值，也就是将其赋为期望的类实例
-@Autowire和@Inject，如果同一类型存在多个bean实例，则需要指定注入的beanName。@Autowired和@Qualifier一起使用，@Inject和@Name一起使用。
-@Resource是JDK的，是基于bean的名字，即beanName，来从spring的IOC容器查找bean注入的
+
